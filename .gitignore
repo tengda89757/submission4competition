@@ -1,0 +1,25 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+JCIIOT/.venv/
+
+# --- Large assets restorable via pipeline/fetch_assets.ps1 (official repo, sha256-verified) ---
+# BC checkpoint (139 MB) and demo dataset (564 MB): run
+#   powershell -ExecutionPolicy Bypass -File pipeline\fetch_assets.ps1
+JCIIOT/robosuite/robosuite/model_epoch_150.pth
+JCIIOT/robosuite/dataset/table_setup_from_dishwasher_sample.hdf5
+# USD scene references (optional, ~70 MB each): fetch_assets.ps1 -All
+competition description/USD/
+
+# --- Training / run intermediates (not needed to reproduce reported scores) ---
+JCIIOT/pipeline/train_output/
+JCIIOT/pipeline/collected/
+JCIIOT/pipeline/logs/
+JCIIOT/recordings/
+JCIIOT/new/mujoco_original/
+
+# Runtime logs
+MUJOCO_LOG.TXT

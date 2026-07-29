@@ -1,0 +1,141 @@
+{
+  "_comment": "Git-LFS assets that GitHub 'Download ZIP' / clone (LFS quota exhausted) leave as pointer stubs. The github.com/.../raw/... endpoint resolves the real LFS content. Paths are relative to the repo root (JCIIOT2026-master). sha256 taken from the committed LFS pointer files; sizes confirmed via HTTP HEAD.",
+  "repo_raw_base": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master",
+  "assets": [
+    {
+      "id": "pth",
+      "essential": true,
+      "path": "JCIIOT/robosuite/robosuite/model_epoch_150.pth",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/robosuite/model_epoch_150.pth",
+      "size": 139543773,
+      "sha256": "ef5910f6a9f6309b5ced617762dffeb1169a8b0cfcea892d158e6b483252169f",
+      "note": "Official BC checkpoint (only one provided). model_epoch_500.pth is NEVER provided; code falls back to this."
+    },
+    {
+      "id": "hdf5",
+      "essential": true,
+      "path": "JCIIOT/robosuite/dataset/table_setup_from_dishwasher_sample.hdf5",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/dataset/table_setup_from_dishwasher_sample.hdf5",
+      "size": 591069600,
+      "sha256": "e7f8fd98aa70ba5cea4cb5fec963d3534083b6d2fa9be7128fa33e9146f79eea",
+      "note": "Demonstration dataset used to (re)train the BC grasp policy."
+    },
+    {
+      "id": "usd1",
+      "essential": false,
+      "path": "competition description/USD/1-3FO3ERFHISEM/3FO3ERFHISEM.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/competition%20description/USD/1-3FO3ERFHISEM/3FO3ERFHISEM.zip",
+      "size": 71105956,
+      "sha256": null,
+      "note": "L1 USD scene reference (not required to run the robosuite sim)."
+    },
+    {
+      "id": "usd3",
+      "essential": false,
+      "path": "competition description/USD/3-3FO3ERRPH7X9/3FO3ERRPH7X9.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/competition%20description/USD/3-3FO3ERRPH7X9/3FO3ERRPH7X9.zip",
+      "size": 69722599,
+      "sha256": null,
+      "note": "L2 USD scene reference."
+    },
+    {
+      "id": "usd5",
+      "essential": false,
+      "path": "competition description/USD/5-3FO3ERTPXEUT/3FO3ERTPXEUT.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/competition%20description/USD/5-3FO3ERTPXEUT/3FO3ERTPXEUT.zip",
+      "size": 70210383,
+      "sha256": null,
+      "note": "L3 USD scene reference."
+    },
+    {
+      "id": "usd7",
+      "essential": false,
+      "path": "competition description/USD/7-3FO3ERFKY9RN/3FO3ERFKY9RN.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/competition%20description/USD/7-3FO3ERFKY9RN/3FO3ERFKY9RN.zip",
+      "size": 70315486,
+      "sha256": null,
+      "note": "L4 USD scene reference."
+    },
+    {
+      "id": "usd9",
+      "essential": false,
+      "path": "competition description/USD/9-3FO3ERT2C5FP/3FO3ERT2C5FP.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/competition%20description/USD/9-3FO3ERT2C5FP/3FO3ERT2C5FP.zip",
+      "size": 72266391,
+      "sha256": null,
+      "note": "L5 USD scene reference."
+    },
+    {
+      "id": "mesh_v2",
+      "essential": false,
+      "path": "JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v2.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v2.zip",
+      "size": 448906,
+      "sha256": null,
+      "note": "Reference lowered-table mesh pack (new/mujoco_original is a reference copy)."
+    },
+    {
+      "id": "mesh_v3",
+      "essential": false,
+      "path": "JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v3_fix_front_pillars.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v3_fix_front_pillars.zip",
+      "size": 448637,
+      "sha256": null,
+      "note": "Reference mesh pack v3."
+    },
+    {
+      "id": "mesh_v4",
+      "essential": false,
+      "path": "JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v4_shorten_front_legs.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v4_shorten_front_legs.zip",
+      "size": 667273,
+      "sha256": null,
+      "note": "Reference mesh pack v4."
+    },
+    {
+      "id": "mesh_v5",
+      "essential": false,
+      "path": "JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v5_piecewise_front_supports.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/new/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v5_piecewise_front_supports.zip",
+      "size": 667263,
+      "sha256": null,
+      "note": "Reference mesh pack v5."
+    },
+    {
+      "id": "rs_mesh_v2",
+      "essential": false,
+      "path": "JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v2.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v2.zip",
+      "size": null,
+      "sha256": null,
+      "note": "Second copy under robosuite assets (size unknown; stub-replacement only)."
+    },
+    {
+      "id": "rs_mesh_v3",
+      "essential": false,
+      "path": "JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v3_fix_front_pillars.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v3_fix_front_pillars.zip",
+      "size": null,
+      "sha256": null,
+      "note": "Second copy under robosuite assets."
+    },
+    {
+      "id": "rs_mesh_v4",
+      "essential": false,
+      "path": "JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v4_shorten_front_legs.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v4_shorten_front_legs.zip",
+      "size": null,
+      "sha256": null,
+      "note": "Second copy under robosuite assets."
+    },
+    {
+      "id": "rs_mesh_v5",
+      "essential": false,
+      "path": "JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v5_piecewise_front_supports.zip",
+      "url": "https://github.com/JCIIOT2026/JCIIOT2026/raw/refs/heads/master/JCIIOT/robosuite/robosuite/models/assets/objects/siemens/mujoco_original/meshes/parts/lowered_table_meshes_70cm_v5_piecewise_front_supports.zip",
+      "size": null,
+      "sha256": null,
+      "note": "Second copy under robosuite assets."
+    }
+  ]
+}

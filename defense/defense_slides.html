@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JCIIOT 2026 答辩 · 工厂分拣智能体机器人 · BIPT-EDU</title>
+<style>
+  :root{
+    --bg0:#0a0e1a; --bg1:#111a30; --card:#141d33; --line:#26324f;
+    --ink:#e8eefc; --dim:#9fb0d0; --mut:#6b7ba0;
+    --c1:#38bdf8; --c2:#22d3ee; --c3:#a78bfa; --ok:#34d399; --warn:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Microsoft YaHei","PingFang SC","Segoe UI",-apple-system,sans-serif;
+    background:radial-gradient(1200px 700px at 78% -8%,#1a2545 0,transparent 60%),
+               radial-gradient(900px 600px at 8% 108%,#16223f 0,transparent 55%),
+               linear-gradient(160deg,var(--bg0),var(--bg1));
+    color:var(--ink); overflow:hidden;
+  }
+  .deck{position:relative;width:100vw;height:100vh}
+  .slide{
+    position:absolute;inset:0;display:none;flex-direction:column;
+    padding:5.2vh 6vw 8vh;animation:fade .35s ease;
+  }
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  h1{font-size:clamp(30px,4.6vw,60px);line-height:1.12;letter-spacing:.5px}
+  h2{font-size:clamp(24px,3.2vw,42px);line-height:1.18;margin-bottom:2.4vh;
+     background:linear-gradient(92deg,var(--c1),var(--c2) 45%,var(--c3));
+     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  h3{font-size:clamp(17px,1.9vw,24px);color:var(--c2);margin:1.6vh 0 .6vh}
+  p,li,td,th{font-size:clamp(14px,1.5vw,21px);line-height:1.62;color:var(--dim)}
+  strong{color:var(--ink)}
+  .kicker{font-size:clamp(12px,1.15vw,15px);letter-spacing:3px;color:var(--c2);
+          text-transform:uppercase;margin-bottom:1.4vh;font-weight:700}
+  .grid{display:grid;gap:1.5vh 1.6vw}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  .g5{grid-template-columns:repeat(5,1fr)}
+  .col{display:flex;flex-direction:column}
+  .card{background:linear-gradient(180deg,rgba(30,42,72,.66),rgba(18,26,48,.5));
+        border:1px solid var(--line);border-radius:16px;padding:2.1vh 1.5vw;
+        backdrop-filter:blur(4px)}
+  .card.hl{border-color:#2f6fb0;box-shadow:0 0 0 1px rgba(56,189,248,.18),0 14px 40px -22px rgba(56,189,248,.5)}
+  .tag{display:inline-block;font-size:clamp(11px,1.05vw,14px);color:#cfe6ff;
+       border:1px solid #2f4675;background:rgba(56,189,248,.09);
+       border-radius:999px;padding:5px 13px;margin:5px 7px 0 0}
+  ul{padding-left:1.2em}li{margin:.5vh 0}
+  li::marker{color:var(--c1)}
+  .mono{font-family:"Cascadia Code","Consolas",monospace;color:#bfe6ff;
+        background:rgba(10,16,30,.7);border:1px solid var(--line);border-radius:8px;
+        padding:1px 8px;font-size:.92em}
+  table{border-collapse:collapse;width:100%;overflow:hidden;border-radius:12px}
+  th,td{border:1px solid var(--line);padding:1.05vh .8vw;text-align:center}
+  th{background:rgba(56,189,248,.12);color:#dff0ff;font-weight:700}
+  td.l,th.l{text-align:left}
+  tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+  .tight th,.tight td{padding:.5vh .7vw;line-height:1.3}
+  .big{font-size:clamp(60px,12vw,150px);font-weight:800;line-height:1;
+       background:linear-gradient(120deg,#7dd3fc,#22d3ee 40%,#a78bfa);
+       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .figwrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+  .figwrap img{max-width:100%;max-height:54vh;border-radius:12px;border:1px solid var(--line);
+               background:#fff;object-fit:contain}
+  .note{font-size:clamp(12px,1.12vw,16px);color:var(--mut);margin-top:1vh}
+  .pill{color:var(--ok);font-weight:700}
+  .pill.w{color:var(--warn)}
+  .center{align-items:center;justify-content:center;text-align:center}
+  .foot{position:absolute;left:6vw;bottom:3vh;font-size:12px;color:var(--mut);letter-spacing:1px}
+  .num{position:absolute;right:6vw;bottom:3vh;font-size:13px;color:var(--mut)}
+  .bar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--c1),var(--c3));
+       z-index:50;transition:width .3s}
+  .nav{position:fixed;right:20px;bottom:18px;z-index:60;display:flex;gap:8px}
+  .nav button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(20,29,51,.85);color:var(--ink);font-size:18px;cursor:pointer}
+  .nav button:hover{border-color:var(--c1);color:var(--c1)}
+  .hint{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:40;
+        font-size:11px;color:var(--mut)}
+  .lead{font-size:clamp(16px,1.9vw,25px);color:var(--ink);margin-bottom:1.4vh}
+  .split{display:grid;grid-template-columns:1fr .95fr;gap:1.8vw;flex:1;min-height:0}
+  .story{display:flex;flex-direction:column;gap:1.15vh;justify-content:center;flex:1}
+  .row{display:flex;gap:12px;align-items:flex-start}
+  .badge{flex:none;font-size:clamp(12px,1.15vw,16px);font-weight:700;border-radius:8px;
+         padding:4px 12px;min-width:64px;text-align:center;margin-top:2px}
+  .b-prob{background:rgba(251,113,133,.14);color:#fda4af;border:1px solid #7f3646}
+  .b-idea{background:rgba(56,189,248,.12);color:#7dd3fc;border:1px solid #2f6fb0}
+  .b-sol{background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid #2f7f5b}
+  .b-res{background:rgba(251,191,36,.12);color:#fcd34d;border:1px solid #8a6d1f}
+  .row p{margin:0}
+  .stat{font-size:clamp(24px,3.2vw,42px);font-weight:800;color:#7dd3fc;line-height:1}
+  .flow{display:flex;align-items:center;gap:.6vw;flex-wrap:wrap;margin:1vh 0}
+  .flow .box{background:rgba(56,189,248,.08);border:1px solid #2f4675;border-radius:10px;
+             padding:1vh 1.1vw;font-weight:600;color:#dff0ff;font-size:clamp(13px,1.3vw,18px)}
+  .flow .ar{color:var(--c2);font-size:1.2em}
+  @media print{
+    html,body{overflow:visible;height:auto}
+    .slide{display:flex !important;position:relative;height:100vh;page-break-after:always;inset:auto}
+    .bar,.nav,.hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide active center">
+    <div class="kicker">JCIIOT 2026 · RunningRobot · 面对面答辩</div>
+    <h1>工厂分拣智能体机器人<br/>从「会失败」到「稳满分」</h1>
+    <div style="height:2.4vh"></div>
+    <div class="big">100 / 100</div>
+    <p class="lead" style="margin-top:1.6vh">L1–L5 五关全部满分 · 三项核心创新 · 零碰撞</p>
+    <div style="margin-top:1vh">
+      <span class="tag">看懂任务</span>
+      <span class="tag">规划步骤</span>
+      <span class="tag">稳定执行</span>
+      <span class="tag">出错兜底</span>
+    </div>
+    <p class="note" style="margin-top:2.6vh">团队：BIPT-EDU　|　JCIIOT 2026 RunningRobot</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">01</div>
+  </section>
+
+  <!-- 2 一图看懂 -->
+  <section class="slide">
+    <div class="kicker">Overview</div><h2>一页看懂：我们做了什么</h2>
+    <div class="split">
+      <div class="col" style="justify-content:center">
+        <h3 style="margin-top:0">任务</h3>
+        <p>在工厂车间里，机器人从<strong>来料工位</strong>抓起指定物料，穿过车间，稳稳放到<strong>指定出料工位</strong>。共 <strong>5 个真实车间场景</strong>，难度层层递进。</p>
+        <h3>成果</h3>
+        <p><strong class="pill">五关全部满分 100/100</strong>，全程<strong>零碰撞</strong>，物体稳稳落在目标区。</p>
+        <h3>一句话方案</h3>
+        <p>让机器人像人一样——<strong>先看懂任务、再规划步骤、最后稳稳执行</strong>。</p>
+      </div>
+      <div class="col" style="justify-content:center">
+        <div class="card hl">
+          <div class="flow" style="justify-content:center">
+            <span class="box">看懂 SOP</span><span class="ar">→</span>
+            <span class="box">规划四步</span>
+          </div>
+          <div class="flow" style="justify-content:center">
+            <span class="box">导航</span><span class="ar">→</span>
+            <span class="box">抓取</span><span class="ar">→</span>
+            <span class="box">搬运</span><span class="ar">→</span>
+            <span class="box">放置</span>
+          </div>
+          <p class="note" style="text-align:center">一套流程通吃五关，靠配置区分场景，不为每关单独写代码。</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">02</div>
+  </section>
+
+  <!-- 3 核心思路 -->
+  <section class="slide">
+    <div class="kicker">Philosophy</div><h2>核心思路：稳，比炫更重要</h2>
+    <div class="split">
+      <div class="col" style="justify-content:center">
+        <p class="lead">机器人比赛，<strong>可靠</strong>是第一位的。</p>
+        <p>我们把系统拆成「会思考的大脑」和「靠得住的手脚」两部分，各司其职：</p>
+        <ul>
+          <li><strong>大脑（灵活）</strong>：让 AI 读懂任务、编排步骤——换个任务描述也能应对。</li>
+          <li><strong>手脚（可靠）</strong>：把抓取、导航、放置这些要精确的动作，交给可控、可复现的方法执行。</li>
+          <li><strong>兜底（保险）</strong>：任何一步出问题，能自动切换到稳妥方案重试。</li>
+        </ul>
+      </div>
+      <div class="col" style="justify-content:center">
+        <div class="card">
+          <h3 style="margin-top:0;text-align:center">把不确定交给会思考的，<br/>把要精确交给可控的</h3>
+          <div class="flow" style="justify-content:center;margin-top:1.5vh">
+            <span class="box">🧠 AI 规划<br/>做什么</span>
+            <span class="ar">＋</span>
+            <span class="box">🦾 稳定执行<br/>怎么做稳</span>
+          </div>
+          <p class="note" style="text-align:center">每一步都<strong>可解释、可复现、可兜底</strong>。</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">03</div>
+  </section>
+
+  <!-- 4 三个拦路虎 -->
+  <section class="slide">
+    <div class="kicker">Challenges</div><h2>真正的挑战：三个「拦路虎」</h2>
+    <p class="lead">直接用默认方法跑，五关是拿不到满分的。我们撞上了三类真实难题：</p>
+    <div class="grid g3" style="flex:1;align-content:center">
+      <div class="card" style="border-color:#7f3646">
+        <div style="font-size:2.4em">🧱</div>
+        <h3 style="color:#fda4af">① 抓不到</h3>
+        <p>目标被「隐形墙」挡住，机械臂一伸就<strong>穿模、抓空</strong>。</p>
+      </div>
+      <div class="card" style="border-color:#7f3646">
+        <div style="font-size:2.4em">🚧</div>
+        <h3 style="color:#fda4af">② 走不通</h3>
+        <p>过道太窄，双臂一张开就<strong>剐蹭设备</strong>，被判碰撞扣分。</p>
+      </div>
+      <div class="card" style="border-color:#7f3646">
+        <div style="font-size:2.4em">📦</div>
+        <h3 style="color:#fda4af">③ 放不稳</h3>
+        <p>多个物体堆在一处，先放的被后放的<strong>挤飞出界</strong>。</p>
+      </div>
+    </div>
+    <p class="note">接下来三页，讲我们怎么把它们一个个解决——这正是我们方案的核心创新。</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">04</div>
+  </section>
+
+  <!-- 5 创新1 抓不到 -->
+  <section class="slide">
+    <div class="kicker">Innovation ①</div><h2>抓不到 → 换个方向抓</h2>
+    <div class="split">
+      <div class="story">
+        <div class="row"><span class="badge b-prob">问题</span><p>默认的抓取点被埋在货架的碰撞体里，机械臂正面伸进去就穿模、抓空。</p></div>
+        <div class="row"><span class="badge b-idea">洞察</span><p>物体的「正面」进不去，但侧面（朝向机器人的一面）其实是<strong>敞开</strong>的。</p></div>
+        <div class="row"><span class="badge b-sol">解决</span><p>把整个抓取动作<strong>转 90°</strong>，从敞开的一侧下手，在侧面重新设一对「虚拟夹取点」。</p></div>
+        <div class="row"><span class="badge b-res">效果</span><p>穿模消失，双臂对称稳抓；隔离测试逐个托盘验证<strong>全部成功</strong>。</p></div>
+      </div>
+      <div class="figwrap"><img src="../paper/figures/grasp_comparison.png" alt="抓取几何对比"/></div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">05</div>
+  </section>
+
+  <!-- 6 创新2 走不通 -->
+  <section class="slide">
+    <div class="kicker">Innovation ②</div><h2>走不通 → 由粗到细找「宽路」</h2>
+    <div class="split">
+      <div class="story">
+        <div class="row"><span class="badge b-prob">问题</span><p>底盘能钻过窄缝，但双臂外伸约半米，窄缝里会剐到设备，直接被判碰撞扣分。</p></div>
+        <div class="row"><span class="badge b-idea">洞察</span><p>关键不是「能不能过」，而是「过得<strong>宽不宽</strong>」——要给伸出的手臂留余量。</p></div>
+        <div class="row"><span class="badge b-sol">解决</span><p>先按<strong>最保守的安全距离</strong>找路，找不到再一档档放宽；起点/终点附近不放大，保证精准停靠。</p></div>
+        <div class="row"><span class="badge b-res">效果</span><p>全程优先走「宽路」，五关<strong>零碰撞</strong>，且能稳稳停到工位正前方。</p></div>
+      </div>
+      <div class="figwrap"><img src="../paper/figures/astar_inflation.png" alt="路径规划对比"/></div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">06</div>
+  </section>
+
+  <!-- 7 创新3 放不稳 -->
+  <section class="slide">
+    <div class="kicker">Innovation ③</div><h2>放不稳 → 错开位置放</h2>
+    <div class="split">
+      <div class="story">
+        <div class="row"><span class="badge b-prob">问题</span><p>L5 要放三个托盘，若都丢在同一点，先放的会被后放的<strong>挤出计分圈</strong>。</p></div>
+        <div class="row"><span class="badge b-idea">洞察</span><p>放置要「各就各位」，不能扎堆；还得先把物体<strong>端正</strong>在身前，别歪着掉。</p></div>
+        <div class="row"><span class="badge b-sol">解决</span><p>把物体稳稳端在<strong>正前方固定位置</strong>；多物体时，依次<strong>左右错开一点</strong>再放。</p></div>
+        <div class="row"><span class="badge b-res">效果</span><p>三个托盘都稳稳落在目标圈内，<strong>满分 30/30</strong>。</p></div>
+      </div>
+      <div class="figwrap"><img src="../paper/figures/placement_comparison.png" alt="放置策略对比"/></div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">07</div>
+  </section>
+
+  <!-- 8 让方案跑起来 -->
+  <section class="slide">
+    <div class="kicker">How It Runs</div><h2>让方案跑起来：AI 编排 + 稳定兜底</h2>
+    <div class="grid g3" style="flex:1;align-content:center">
+      <div class="card hl">
+        <h3 style="margin-top:0">🧠 读懂任务</h3>
+        <p>AI 读懂 SOP 文字，自动排出<strong>「移动→抓取→移动→放置」</strong>四步计划。换任务不用改代码。</p>
+      </div>
+      <div class="card hl">
+        <h3 style="margin-top:0">🦾 稳定执行</h3>
+        <p>技能层按计划<strong>精确导航、抓取、放置</strong>，融入前面三项创新保证成功。</p>
+      </div>
+      <div class="card hl">
+        <h3 style="margin-top:0">🛟 出错兜底</h3>
+        <p>抓取先用学习模型；万一不稳，立刻切到<strong>稳定脚本</strong>重试——不掉链子。</p>
+      </div>
+    </div>
+    <p class="note">一句话：会思考的负责「做什么」，可控的负责「怎么做稳」。二者分层，互不拖累。</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">08</div>
+  </section>
+
+  <!-- 9 成果 + 耗时 -->
+  <section class="slide">
+    <div class="kicker">Results</div><h2>成果：五关满分 + 耗时统计</h2>
+    <table style="margin-top:.6vh">
+      <tr><th>关卡</th><th class="l">场景 / 难点</th><th>满分</th><th>得分</th><th>端到端耗时</th></tr>
+      <tr><td>L1</td><td class="l">单物体搬运（基线）</td><td>10</td><td class="pill">10</td><td>83.9 s</td></tr>
+      <tr><td>L2</td><td class="l">并排托盘 · 东墙抓取</td><td>15</td><td class="pill">15</td><td>77.3 s</td></tr>
+      <tr><td>L3</td><td class="l">窄道导航 · 分级找路</td><td>20</td><td class="pill">20</td><td>94.2 s</td></tr>
+      <tr><td>L4</td><td class="l">密集车间 · 分级找路</td><td>25</td><td class="pill">25</td><td>102.3 s</td></tr>
+      <tr><td>L5</td><td class="l">三物体 · 分散放置</td><td>30</td><td class="pill">30</td><td>453.8 s</td></tr>
+      <tr><td><strong>合计</strong></td><td class="l">五关全满分 · 零碰撞</td><td><strong>100</strong></td><td class="pill"><strong>100</strong></td><td><strong>≈ 13.5 min</strong></td></tr>
+    </table>
+    <div class="grid g3" style="margin-top:1.6vh">
+      <div class="card"><div class="stat">100/100</div><p class="note">五关全部满分</p></div>
+      <div class="card"><div class="stat">0.09–0.15 m</div><p class="note">放置误差（阈值 0.80 m）</p></div>
+      <div class="card"><div class="stat">0 次</div><p class="note">全程碰撞</p></div>
+    </div>
+    <p class="note">耗时为本地端到端运行（含 AI 规划 + 仿真执行）；L5 需完成<strong>三趟</strong>完整搬运，故最长。</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">09</div>
+  </section>
+
+  <!-- 10 可复现 -->
+  <section class="slide center">
+    <div class="kicker">Reproducible</div><h2>成绩可复现，不是「说说而已」</h2>
+    <div class="card hl" style="margin:1vh 0">
+      <p class="mono" style="font-size:1.1em;color:#bfe6ff">python verify_submission.py</p>
+    </div>
+    <p class="lead">一条命令，秒级重新核算五关 → <strong class="pill">100/100</strong></p>
+    <div class="grid g3" style="width:100%;margin-top:1.4vh">
+      <div class="card"><h3 style="margin-top:0">官方规则</h3><p class="note">评分用的是官方规则，不是我们自己发明的</p></div>
+      <div class="card"><h3 style="margin-top:0">无需重环境</h3><p class="note">不用 GPU、不用大模型、不用渲染</p></div>
+      <div class="card"><h3 style="margin-top:0">人人可验</h3><p class="note">评委可独立重算，结果完全一致</p></div>
+    </div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">10</div>
+  </section>
+
+  <!-- 11 演示 -->
+  <section class="slide center">
+    <div class="kicker">Demo</div><h2>现场演示</h2>
+    <div class="grid g5" style="width:100%;margin:1.5vh 0 2vh">
+      <div class="card"><h3 style="margin:0">L1</h3><p class="note">单物体</p></div>
+      <div class="card"><h3 style="margin:0">L2</h3><p class="note">换向抓取</p></div>
+      <div class="card"><h3 style="margin:0">L3</h3><p class="note">窄道找路</p></div>
+      <div class="card"><h3 style="margin:0">L4</h3><p class="note">密集车间</p></div>
+      <div class="card"><h3 style="margin:0">L5</h3><p class="note">三物体分散放</p></div>
+    </div>
+    <p class="lead">五关各有 <strong>跟随视角</strong> + <strong>俯视全局</strong> 两段真实仿真视频</p>
+    <p class="note">均由满分轨迹回放渲染而成，真实可查。</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">11</div>
+  </section>
+
+  <!-- 12 总结 -->
+  <section class="slide">
+    <div class="kicker">Summary</div><h2>总结与展望</h2>
+    <div class="grid g2" style="flex:1;align-content:center">
+      <div class="card hl"><h3 style="margin-top:0">我们做对了什么</h3><ul>
+        <li>不回避问题：<strong>找准三个真实难点</strong>，逐一攻克</li>
+        <li>分层设计：AI 灵活编排 + 稳定可靠执行</li>
+        <li>结果扎实：<strong>五关满分、零碰撞、一键可复现</strong></li>
+      </ul></div>
+      <div class="card"><h3 style="margin-top:0">未来方向</h3><ul>
+        <li>让抓取从「稳定脚本」走向<strong>学习式泛化</strong></li>
+        <li>动态避障与在线重规划</li>
+        <li>多机器人协同调度</li>
+      </ul></div>
+    </div>
+    <div class="center" style="margin-top:1vh"><div class="big" style="font-size:clamp(40px,7vw,84px)">100 / 100</div></div>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">12</div>
+  </section>
+
+  <!-- 13 Q&A -->
+  <section class="slide center">
+    <h1>谢谢聆听</h1>
+    <p class="lead" style="margin-top:2vh">恳请专家批评指正 · 欢迎提问</p>
+    <div style="margin-top:1.4vh">
+      <span class="tag">换向抓取</span><span class="tag">分级找路</span><span class="tag">分散放置</span>
+      <span class="tag">AI 规划</span><span class="tag">稳定兜底</span>
+    </div>
+    <p class="note" style="margin-top:2.6vh">团队：BIPT-EDU　·　JCIIOT 2026 RunningRobot</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">13</div>
+  </section>
+
+  <!-- 14 备用：逐关详解 -->
+  <section class="slide">
+    <div class="kicker">Appendix · 备用</div><h2>五关任务逐关详解</h2>
+    <table class="tight" style="margin-top:0;font-size:clamp(11px,1.12vw,15px)">
+      <tr><th>关卡</th><th class="l">场景 / 搬运路线</th><th class="l">抓取物体</th><th>得分</th><th>耗时</th><th class="l">难点 → 对策</th></tr>
+      <tr><td>L1</td><td class="l">FactorySorting1<br/>input_5 → output_4</td><td class="l">料箱<br/>line_5_container_h01_near</td><td class="pill">10/10</td><td>83.9s</td><td class="l">基线关：官方 BC 模型可直接满分</td></tr>
+      <tr><td>L2</td><td class="l">FactorySorting3<br/>input_6 → output_4</td><td class="l">绿色托盘<br/>green_tote_b01_lower</td><td class="pill">15/15</td><td>77.3s</td><td class="l">抓取点被埋 → <strong>东墙虚拟抓取</strong></td></tr>
+      <tr><td>L3</td><td class="l">FactorySorting5<br/>input_6 → output_5</td><td class="l">蓝色托盘<br/>blue_tote_b01_near_left</td><td class="pill">20/20</td><td>94.2s</td><td class="l">窄道剐蹭 → <strong>分级 A* 膨胀</strong></td></tr>
+      <tr><td>L4</td><td class="l">FactorySorting7<br/>input_2 → output_5</td><td class="l">蓝色容器<br/>blue_container_h01_back_upper</td><td class="pill">25/25</td><td>102.3s</td><td class="l">密集车间·路最长 → 分级 A*</td></tr>
+      <tr><td>L5</td><td class="l">FactorySorting9<br/>input_1 → output_6</td><td class="l">3×白色托盘<br/>white_tote_b01_left_center/front/back</td><td class="pill">30/30</td><td>453.8s</td><td class="l">多物体挤飞 → <strong>换向抓取 + 分散放置</strong></td></tr>
+    </table>
+    <p class="note">递进逻辑：满分 10→30、物体 1→3 个；难度沿「抓取被挡 → 导航又窄又密 → 多物体放置」递增。L5 跑三趟搬运，故耗时最长。</p>
+    <div class="foot">BIPT-EDU · JCIIOT 2026</div><div class="num">14 · 备用</div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" title="上一页 (←)">‹</button>
+  <button id="next" title="下一页 (→)">›</button>
+</div>
+<div class="hint">← / → 或空格翻页　·　F 全屏　·　Home/End 首尾　·　打印可导出 PDF（横向）</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0, bar = document.getElementById('bar');
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+    bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+  function next(){ show(i + 1); } function prev(){ show(i - 1); }
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+  document.addEventListener('keydown', function(e){
+    if (['ArrowRight',' ','PageDown','Enter'].indexOf(e.key) > -1){ next(); e.preventDefault(); }
+    else if (['ArrowLeft','PageUp'].indexOf(e.key) > -1){ prev(); e.preventDefault(); }
+    else if (e.key === 'Home'){ show(0); }
+    else if (e.key === 'End'){ show(slides.length - 1); }
+    else if (e.key === 'f' || e.key === 'F'){
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  var sx = null;
+  addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, {passive:true});
+  addEventListener('touchend', function(e){
+    if (sx === null) return; var dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 50){ dx < 0 ? next() : prev(); } sx = null;
+  }, {passive:true});
+  var start = parseInt((location.hash || '#1').slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# No Git-LFS: the upstream repo's LFS quota exhaustion caused pointer-stub failures.
+# Large binaries (.pth/.hdf5/USD zips) are gitignored and restored via
+# JCIIOT/pipeline/fetch_assets.ps1 (sha256-verified downloads from the official repo).
+* text=auto
+*.json text
+*.md text
+*.py text
+*.ps1 text
+*.zip binary
+*.docx binary
+*.pdf binary
+*.mp4 binary
+*.png binary
+*.jpg binary
