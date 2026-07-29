@@ -1,4 +1,4 @@
-# JCIIOT 2026 "RunningRobot" — Team BIPT-EDU Submission
+#  "RunningRobot" — Team BIPT-EDU Submission
 
 **Final objective score: 100 / 100 (L1 10 + L2 15 + L3 20 + L4 25 + L5 30, zero collisions)**
 
@@ -23,7 +23,7 @@ a dedicated Novelty Statement, and video demonstrations of all five levels.
 ## 2. Verify the Reported 100/100 in Seconds (no GPU, no LLM)
 
 ```powershell
-cd JCIIOT
+
 powershell -ExecutionPolicy Bypass -File pipeline\setup_env.ps1     # one-time: uv venv + pinned deps
 cd ..
 JCIIOT\.venv\Scripts\python.exe verify_submission.py
@@ -39,7 +39,7 @@ Two large binaries are gitignored (upstream Git-LFS quota exhaustion made LFS
 unreliable) and restored with sha256 verification from the official repository:
 
 ```powershell
-cd JCIIOT
+
 powershell -ExecutionPolicy Bypass -File pipeline\fetch_assets.ps1   # BC checkpoint + demo dataset
 ollama pull qwen2.5:7b                                                # local LLM planner
 powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Canonical -Score
@@ -85,7 +85,7 @@ of [`paper.pdf`](paper.pdf).
 ├── defense/                 ← defense slides + expert Q&A
 ├── source_code/             ← curated participant-modified layers only
 │                              (core / skills / environments / pipeline)
-├── JCIIOT/                  ← full runnable project (agent, robosuite fork,
+├── JCIOT/                  ← full runnable project (agent, robosuite fork,
 │                              robomimic, knowledge base, pipeline scripts)
 └── competition description/ ← official problem statement, SOPs, template
 ```
@@ -100,5 +100,5 @@ python-docx / streamlit (tooling). Full pinned list:
 
 ---
 
-**Team:** BIPT-EDU · **Competition:** JCIIOT 2026 "RunningRobot" (Tsinghua CS ×
+**Team:** BIPT-EDU · **Competition:**   "RunningRobot" (Tsinghua CS ×
 Siemens Industrial Intelligence & IoT Joint Research Center)
