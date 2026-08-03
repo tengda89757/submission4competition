@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 
+import numpy as np
+
 from robot_agent.core.scene_context import SceneContext
 from robot_agent.core.types import ExecutionContext, SkillResult
 from robot_agent.skills.base import BaseSkill
@@ -30,12 +32,13 @@ class PlaceDownSkill(BaseSkill):
         )
         self._backend = backend
         self._scene = scene_context
+        self._drop_index = 0
 
     def _ensure_output_port(self, target: str) -> None:
-        """Register missing output ports (output_5/6) on the env at runtime.
+        """Register missing output ports on the env at runtime.
 
         The env classes only pre-register output_1..4 (table/bin/conveyor/shelf),
-        but L3/L4/L5 place at output_5/output_6. The backend's station lookup and
+        but L3/L4 place at output_5 and L5 at aux_output_1. The backend lookup and
         table-top-z fallback both work from ``env.output_ports`` centers, so we
         inject the missing entry from the scene semantic map (participant-editable
         skill layer; no locked backend/env code is modified).
@@ -50,7 +53,6 @@ class PlaceDownSkill(BaseSkill):
             station = self._scene.output_ports.get(target)
             if station is None:
                 return
-            import numpy as np
             center = np.asarray(station.center, dtype=float)
             if center.size == 2:
                 center = np.array([center[0], center[1], 0.0])
@@ -79,7 +81,11 @@ class PlaceDownSkill(BaseSkill):
         # Physics place (only mode — no teleport fallback)
         if hasattr(self._backend, "place_object_physics"):
             try:
-                ok = self._backend.place_object_physics(target)
+                restore_state = self._configure_multi_object_drop(target)
+                try:
+                    ok = self._backend.place_object_physics(target)
+                finally:
+                    self._restore_output_center(restore_state)
                 msg = f"Physics place {'OK' if ok else 'FAIL'}: {target}"
                 if not ok:
                     _held = getattr(self._backend, "_held_crate_name", None)
@@ -110,3 +116,54 @@ class PlaceDownSkill(BaseSkill):
             message=f"Placed (snap): {target}",
             payload={"action": "place_down", "target": target, "raw_target": raw_target, "method": "teleport"},
         )
+
+    def _configure_multi_object_drop(self, target: str):
+        """Choose three distinct points on L5's official target table.
+
+        Only runtime station metadata used by the place controller is adjusted;
+        object poses, attachment state, semantic-map files and trajectories are
+        never edited.  The original metadata is restored immediately afterward.
+        """
+        if target != "aux_output_1" or self._scene is None:
+            return None
+        lateral = (0.0, 0.38, -0.38)[self._drop_index % 3]
+        self._drop_index += 1
+        if abs(lateral) < 1e-9:
+            return None
+        try:
+            station = self._scene.output_ports[target]
+            env = getattr(self._backend, "env", None)
+            entry = getattr(env, "output_ports", {}).get(target)
+            if entry is None:
+                return None
+
+            scene_center = np.asarray(station.center, dtype=float).copy()
+            env_center = np.asarray(entry["center"], dtype=float).copy()
+            approach = np.asarray(station.approach, dtype=float)
+            toward_table = scene_center[:2] - approach[:2]
+            norm = float(np.linalg.norm(toward_table))
+            if norm < 1e-9:
+                return None
+            toward_table /= norm
+            right = np.array([toward_table[1], -toward_table[0]], dtype=float)
+            delta = lateral * right
+
+            shifted_scene = scene_center.copy()
+            shifted_scene[:2] += delta
+            shifted_env = env_center.copy()
+            shifted_env[:2] += delta
+            station.center = shifted_scene
+            entry["center"] = shifted_env
+            print(f"[PLACE_DOWN] {target}: table drop point {lateral:+.2f}m", flush=True)
+            return entry, env_center, station, scene_center
+        except Exception:
+            logger.exception("place_down: failed to select multi-object drop point")
+            return None
+
+    @staticmethod
+    def _restore_output_center(state) -> None:
+        if state is None:
+            return
+        entry, env_center, station, scene_center = state
+        entry["center"] = env_center
+        station.center = scene_center

@@ -1,12 +1,11 @@
 """
-patch_grasp_pose.py — Compute the correct BC grasp base pose for a level from the
-scene's own grasp-site geometry, and write it into knowledge/task_config.json.
+patch_grasp_pose.py — Diagnose the BC grasp base pose from live scene geometry.
 
 Why: task_config's grasp_poses were calibrated for the L1 layout only. In scenes
 3/7 the same input_N is at a different world position and objects are rotated, so
 the baseline pose is metres off (verified: L2 grasp failed at nav pose 13.0,3.95
-while the tote sits at 11.87,4.63). The organizers ruled task_config is part of
-the baseline solution, not the assignment — tuning it is participant work.
+while the tote sits at 11.87,4.63). The runtime pick-up skill performs this
+calculation directly; this diagnostic never writes locked task_config.json.
 
 Rule (reverse-engineered from the trained L1 geometry and verified 10/10):
     base_xy = object_center_xy + 0.941 * normalize(site_center_xy - object_center_xy)
@@ -98,7 +97,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--level", required=True, choices=["L1", "L2", "L3", "L4", "L5"])
     ap.add_argument("--object", default="", help="override object (default: task_config object)")
-    ap.add_argument("--source", default="", help="override source port key to patch")
+    ap.add_argument("--source", default="", help="override source port key to display")
     ap.add_argument("--shift-x", type=float, default=0.0, help="extra base x shift (clear scene obstacles)")
     ap.add_argument("--shift-y", type=float, default=0.0, help="extra base y shift")
     ap.add_argument("--dry-run", action="store_true")
@@ -108,7 +107,10 @@ def main() -> int:
     task = next(t for t in cfg["tasks"] if t["level"] == args.level)
     env_name = task["env_name"]
     source = args.source or task["source"]
-    object_name = args.object or task["object"]
+    configured_objects = task.get("object", "")
+    if isinstance(configured_objects, (list, tuple)):
+        configured_objects = next((str(item) for item in configured_objects if item), "")
+    object_name = args.object or str(configured_objects)
 
     print(f"level={args.level} scene={env_name} source={source} object={object_name}")
     if object_name in KNOWN_DEMO_POSES:
@@ -132,13 +134,7 @@ def main() -> int:
     old = cfg["grasp_poses"].get(source)
     print(f"computed grasp pose: pos={pos} yaw={yaw}")
     print(f"previous config    : {old}")
-    if args.dry_run:
-        print("(dry-run, config unchanged)")
-        return 0
-
-    cfg["grasp_poses"][source] = {"pos": pos, "yaw": yaw}
-    CFG_PATH.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"patched {CFG_PATH.name}: grasp_poses[{source}] updated")
+    print("(diagnostic only; locked task_config.json unchanged)")
     return 0
 
 

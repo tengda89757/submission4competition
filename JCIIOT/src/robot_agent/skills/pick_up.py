@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import json
 import logging
+import math
 import re
-from pathlib import Path
 
 import numpy as np
 
@@ -13,6 +12,7 @@ from robot_agent.core.scene_context import SceneContext
 from robot_agent.core.types import ExecutionContext, SkillResult
 from robot_agent.skills.base import BaseSkill
 from robot_agent.skills.scripted_grasp import (
+    compute_natural_base_pose,
     compute_rotated_base_pose,
     install_scripted_grasp_fallback,
     resolve_unmoved_override,
@@ -39,28 +39,6 @@ _CN_INDEX: dict[str, str] = {
 # Station kind keywords to strip from target
 _CN_KIND: list[str] = ["传送带", "架子", "桌子", "箱子", "料箱", "料斗",
                         "conveyor", "shelf", "table", "bin"]
-
-
-def _config_grasp_pose(target: str) -> dict | None:
-    """Calibrated grasp base pose for a station from knowledge/task_config.json.
-
-    Poses are (re)calibrated per scene by pipeline/patch_grasp_pose.py using the
-    object's own grasp-site geometry. Without this, the backend falls back to the
-    nav approach pose, which does not match the BC policy's trained geometry
-    outside the L1 layout (verified L2 grasp failure at the nav pose).
-    """
-    try:
-        cfg_path = Path(__file__).resolve().parents[3] / "knowledge" / "task_config.json"
-        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-        entry = cfg.get("grasp_poses", {}).get(target)
-        if entry:
-            return {
-                "robot_base_pos": [float(entry["pos"][0]), float(entry["pos"][1]), 0.0],
-                "robot_base_ori": [0.0, 0.0, float(entry["yaw"])],
-            }
-    except Exception:
-        logger.exception("failed to load calibrated grasp pose for %s", target)
-    return None
 
 
 def _resolve_station_name(target: str, scene: SceneContext) -> str:
@@ -144,7 +122,6 @@ class PickUpSkill(BaseSkill):
         self._scene = scene_context
         self._grid = grid
         self._path_spacing = path_spacing
-        self._place_seq = 0  # per-task drop counter (multi-object lateral spread)
         # BC-150 is overfit to L1; the scripted expert approach succeeds where BC
         # fails (validated 20/20 in L3/L4). Installed as a fallback at skill
         # construction (robosuite is fully loaded by now): BC runs first, so the
@@ -237,16 +214,13 @@ class PickUpSkill(BaseSkill):
                 logger.exception("pick_up: backend object resolution failed")
                 object_name = None
 
-        # The agent pipeline passes the nav approach pose as grasp_initial_base_pose,
-        # but the BC policy must start from its trained relative geometry. Prefer the
-        # calibrated pose (pipeline/patch_grasp_pose.py) whenever one exists — for L1
-        # they coincide, so this is regression-free.
-        calibrated = _config_grasp_pose(target)
-        # Rotated-approach objects (L2/L5): the pose must be computed PER OBJECT
-        # from live geometry — the config pose is keyed by source port and cannot
-        # distinguish the three L5 totes (and its yaw predates the rotation).
+        # Derive the scene-specific pose from official object geometry here in the
+        # participant-editable skill layer instead of rewriting task_config.json.
+        raw_env = getattr(self._backend, "env", None)
+        calibrated = compute_natural_base_pose(raw_env, object_name)
+        # Geometrically blocked objects use their explicitly validated open wall.
         if object_name:
-            rotated = compute_rotated_base_pose(getattr(self._backend, "env", None), object_name)
+            rotated = compute_rotated_base_pose(raw_env, object_name)
             if rotated is not None:
                 logger.info("pick_up: rotated-approach pose for %s: %s", object_name, rotated)
                 print(f"[PICK_UP] rotated grasp pose for {object_name}: "
@@ -264,7 +238,8 @@ class PickUpSkill(BaseSkill):
             # nav base stays at the port approach point, that offset is metres wrong
             # (verified L3: object swept a 19 m arc during the turn and landed on the
             # floor at (22.6,-12.1)). For L1 the poses coincide, so no regression.
-            self._drive_nav_base_to(calibrated["robot_base_pos"][:2])
+            nav_clearance = 0.10 if (object_name or "").startswith("white_tote_b01_left_") else 0.0
+            self._drive_nav_base_to(calibrated, clearance=nav_clearance)
 
         # Physics grasp (only mode — no teleport fallback)
         if hasattr(self._backend, "grasp_object_physics"):
@@ -281,8 +256,6 @@ class PickUpSkill(BaseSkill):
                     initial_base_pose=initial_base_pose,
                 )
                 self._restore_other_objects(snapshot, object_name)
-                if ok:
-                    self._normalize_transport_offset()
                 resolved_object = getattr(self._backend, "_held_crate_name", None) or object_name
                 return SkillResult(
                     skill_name=self.name,
@@ -371,63 +344,65 @@ class PickUpSkill(BaseSkill):
         except Exception:
             logger.exception("pick_up: object restore failed")
 
-    def _normalize_transport_offset(self) -> None:
-        """Clamp the transport-attachment hold offset to straight-ahead 0.94 m.
-
-        The attachment captures (object - nav_base) in the base frame at attach
-        time. When the nav base isn't exactly at the calibrated grasp pose, that
-        offset points sideways (verified L3: [0.245, -1.04]), so at the output
-        station the object hangs off the table edge and drops to the floor. The
-        L1-trained hold geometry is 0.94 m straight ahead — normalizing to that
-        makes place_down release the object right over the station center.
-
-        Multi-object tasks (L5) additionally spread successive drops laterally:
-        releasing every tote at the same spot chain-pushes the earlier ones off
-        the 0.80 m scoring radius (verified: first tote ended 0.92 m out). The
-        first drop stays at 0.0 so single-object levels are untouched.
-        """
+    def _drive_nav_base_to(self, pose: dict, *, clearance: float = 0.0) -> None:
+        """Physically drive and turn the nav base to the computed grasp pose."""
         try:
-            from robosuite.environments.factory_sorting.transport_attachment import (
-                TRANSPORT_ATTACHMENT_ATTR,
-            )
-            raw = getattr(self._backend, "env", None) or getattr(self._backend, "_env", None)
-            attachment = getattr(raw, TRANSPORT_ATTACHMENT_ATTR, None) if raw is not None else None
-            if not attachment or not attachment.get("active", False):
-                return
-            lateral = (0.0, 0.38, -0.38)[self._place_seq % 3]
-            self._place_seq += 1
-            rel = np.asarray(attachment["relative_xy"], dtype=float)
-            dist = float(np.linalg.norm(rel))
-            normalized = np.array([0.941, lateral], dtype=float)
-            if np.linalg.norm(rel - normalized) < 0.05:
-                return
-            attachment["relative_xy"] = normalized
-            logger.info("pick_up: normalized transport offset %s (|%.3f|) -> %s",
-                        np.round(rel, 3).tolist(), dist, normalized.tolist())
-            print(f"[PICK_UP] transport offset normalized {np.round(rel,3).tolist()} -> [0.941, 0.0]",
-                  flush=True)
-        except Exception:
-            logger.exception("pick_up: transport offset normalization failed")
-
-    def _drive_nav_base_to(self, goal_xy) -> None:
-        """Best-effort A* drive of the nav base to the calibrated grasp pose."""
-        try:
+            goal = np.asarray(pose["robot_base_pos"][:2], dtype=float)
+            goal_yaw = float(pose["robot_base_ori"][2])
+            forward = np.array([math.cos(goal_yaw), math.sin(goal_yaw)], dtype=float)
+            nav_goal = goal - float(clearance) * forward
+            staging = nav_goal - 0.65 * forward
             cur_xy, _ = self._backend.get_base_pose()
-            goal = np.asarray(goal_xy, dtype=float)
-            dist = float(np.linalg.norm(np.asarray(cur_xy, dtype=float) - goal))
-            if dist <= 0.5:
-                return
-            if self._grid is None or self._scene is None:
-                logger.warning("pick_up: nav base %.2fm from grasp pose but no grid — skipping pre-drive", dist)
-                return
-            from robot_agent.core.map_loader import plan_world_path
-            scene_dict = {"bounds": self._scene.bounds, "resolution": self._scene.resolution}
-            path = plan_world_path(scene_dict, self._grid, np.asarray(cur_xy, dtype=float), goal,
-                                   min_spacing=self._path_spacing)
-            if not path:
-                logger.warning("pick_up: A* to grasp pose failed (%.2fm away)", dist)
-                return
-            reached = self._backend.follow_path(path)
-            logger.info("pick_up: pre-drove nav base %.2fm to grasp pose, reached=%s", dist, reached)
+            cur_xy = np.asarray(cur_xy, dtype=float)
+
+            # First retreat to a staging point outside the table footprint.  This
+            # prevents extended fingers from sweeping through the table while the
+            # robot turns to its final grasp heading.
+            if float(np.linalg.norm(cur_xy - staging)) > 0.08:
+                if self._grid is None or self._scene is None:
+                    logger.warning("pick_up: no grid for safe staging motion")
+                    return
+                from robot_agent.core.map_loader import plan_world_path
+                scene_dict = {"bounds": self._scene.bounds, "resolution": self._scene.resolution}
+                path = plan_world_path(
+                    scene_dict, self._grid, cur_xy, staging,
+                    min_spacing=self._path_spacing,
+                )
+                if not path:
+                    logger.warning("pick_up: A* to safe staging pose failed")
+                    return
+                self._backend.follow_path(path)
+
+            # The official attachment captures offset in the nav-base frame.
+            # Align at the safe staging point, then approach straight ahead.
+            from robosuite.environments.factory_sorting.turn_to_station import turn_to_face_xy
+            raw = getattr(self._backend, "env", None)
+            cur_xy, _ = self._backend.get_base_pose()
+            face_xy = np.asarray(cur_xy, dtype=float) + forward
+            params = self._backend._rp["turn"]
+            result = turn_to_face_xy(
+                env=raw,
+                target_xy=face_xy,
+                tolerance=params["tolerance"],
+                max_iters=params["max_iters"],
+                turn_steps=params["turn_steps"],
+                settle_steps=params["settle_steps"],
+                render=not self._backend._headless,
+                render_sleep=0.0,
+                sync_attachment=False,
+                post_step_callback=self._backend._record_trajectory_frame,
+            )
+            logger.info("pick_up: safe-stage yaw %.4f, result=%s", goal_yaw, result)
+
+            cur_xy, _ = self._backend.get_base_pose()
+            cur_xy = np.asarray(cur_xy, dtype=float)
+            distance = float(np.linalg.norm(nav_goal - cur_xy))
+            steps = max(2, int(np.ceil(distance / 0.08)))
+            approach = [cur_xy + (nav_goal - cur_xy) * (i / steps) for i in range(1, steps + 1)]
+            reached = self._backend.follow_path(approach)
+            logger.info(
+                "pick_up: straight final approach %.2fm (clearance %.2fm), reached=%s",
+                distance, clearance, reached,
+            )
         except Exception:
             logger.exception("pick_up: pre-drive to grasp pose failed")

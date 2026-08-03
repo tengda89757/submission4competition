@@ -84,15 +84,15 @@ Validate the pipeline quickly first: `python pipeline\train_bc.py --debug --no-i
 
 ---
 
-## 4. L1–L5 reference (from `sop_main.md` / `task_config.json`)
+## 4. L1–L5 reference (official commit `129e94a9`)
 
-| Level | Scene | Source→Target | Object (baseline) | Grasp pose (x,y,yaw) | Max |
-|---|---|---|---|---|---|
-| L1 | factory_sorting_1 | input_5→output_4 | line_5_container_h01_near | (8.00, 4.60, −3.139) | 10 |
-| L2 | factory_sorting_3 | input_6→output_4 | green_tote_b01_upper | (6.00, 4.80, −3.139) | 15 |
-| L3 | factory_sorting_5 | input_6→output_5 | **blue** bin (docx) | (6.00, 4.80, −3.139) | 20 |
-| L4 | factory_sorting_7 | input_2→output_5 | blue_container_h01_back_upper | (8.56, −3.92, −3.14) | 25 |
-| L5 | factory_sorting_9 | input_1→output_6 | 3× white_tote (left) | (5.03, −3.84, −3.14) | 30 |
+| Level | Scene | Source→Target | Official candidates | Max |
+|---|---|---|---|---|
+| L1 | factory_sorting_1 | input_5→output_4 | line_5_container_h01_near/far | 10 |
+| L2 | factory_sorting_3 | input_6→output_4 | green_tote_b01_upper/lower | 15 |
+| L3 | factory_sorting_5 | aux_input_1→output_5 | blue_tote_b01_far_right/near_right | 20 |
+| L4 | factory_sorting_7 | input_2→output_5 | blue_container_h01_back_upper/lower | 25 |
+| L5 | factory_sorting_9 | input_1→aux_output_1 | 3× white_tote_b01_left_* | 30 |
 
 Scoring per level: ~50% "grasp + leave source (>1 m)", ~50% "object within 0.80 m of
 target"; **−5** if any collision frame. L5 scores the three totes independently.
@@ -153,78 +153,40 @@ Exact dependency versions are frozen in `pipeline/requirements.resolved.txt`.
 
 ---
 
-## 8. Erratum sync & multi-scene retrain (2026-07-23)
+## 8. Official-current geometry and compliance fix (2026-08-03)
 
-**Official erratum** (`ERRATUM.md`, commit `f4ab8fd`): L2 wording fixes only; **L3's pick
-point changed to "Placement Point 1"** — the side table `side_table_pos_y_1` at
-(-5.86, 8.47) holding `blue_tote_b01_near_left/far_left` (input_6 has NO object in
-scene 5, which config/sop3.md concealed). Local docx files updated.
+The final pipeline is pinned to official commit
+`129e94a9cff787031472045e19c24a4baeaefc48`. The locked app, task config,
+generated maps, environment base/backend, core types, and task runner are
+byte-identical to that commit.
 
-**Grasp-pose calibration rule** (verified: reproduces the trained L1 pose to 2 cm):
-`base = object_xy + 0.941 m × normalize(site_center − object_xy)`, yaw facing the
-object. `patch_grasp_pose.py` writes it into `task_config.json`; `run_level -Canonical`
-recalibrates automatically; `pick_up.py` force-feeds the calibrated pose to the backend
-(the nav approach pose is metres off outside L1). L1 keeps its EXACT demo pose
-(`KNOWN_DEMO_POSES`) — 2 cm matters for BC.
+The executable fixes live in the participant-editable skill layer:
 
-**Retraining traps found the hard way**:
-- The collector's default `show_object_sites=True` renders bright marker spheres into
-  the camera obs; runtime hides them → a policy trained on such demos fails at eval
-  (train/eval visual mismatch). `collect_demos_multi.py` now forces markers OFF.
-- Runtime grasp pose must EQUAL the demo-collection pose per object.
-- `retrain_all.ps1` runs the whole loop detached (collect → merge → train 3000 →
-  matrix eval on L1/L3/L4 → install as model_epoch_500.pth ONLY if L1 passes, else
-  falls back to official 150).
+1. **Exact auxiliary-station resolution** (`skills/move.py`) checks exact names
+   before substring matching, so `aux_input_1` and `aux_output_1` cannot collapse
+   to `input_1` / `output_1`.
+2. **Live geometry-derived grasp approach** (`skills/scripted_grasp.py`,
+   `skills/pick_up.py`) reads the running scene's object and grasp-site positions,
+   moves through a safe A* staging point, turns physically, and then approaches
+   straight. `patch_grasp_pose.py` is diagnostic-only and never writes the locked
+   task config.
+3. **L5 multi-object placement** (`skills/place_down.py`) selects three distinct
+   valid table points on `aux_output_1`, restoring temporary runtime metadata after
+   each official place-controller call.
+4. No participant code writes transport-attachment state or rewrites trajectory
+   JSON. The official backend captures attachment after a successful grasp.
 
-**Physical reachability audit** (scripted collector, isolated grasp):
-- L1 ✅, L3 (erratum side-table) ✅, L4 (rotated container) ✅, L5 side-table white
-  totes ✅ — all 100% scripted success at calibrated poses.
-- **L2 input_6 lower/upper tote and L5 input_1 totes are NOT scripted-reachable**:
-  footprints collide with production-line AABB proxies or exceed dual-arm span
-  (residuals 0.3–0.6 m). These levels must rely on the learned policy's free-form
-  trajectories (or another approach) — documented as the open frontier.
+**Final strict verification** (`verify_submission.py`):
 
-**Per-level model selection**: `run_level.ps1 -Checkpoint <pth>` temporarily slots any
-checkpoint as `model_epoch_500.pth` and restores afterwards.
+| Level | Score | Result |
+|---|---:|---|
+| L1 | 10 / 10 | PASS |
+| L2 | 15 / 15 | PASS |
+| L3 | 20 / 20 | PASS, zero collision frames |
+| L4 | 25 / 25 | PASS |
+| L5 | 30 / 30 | PASS, zero collision frames |
+| **Total** | **100 / 100** | **PASS** |
 
-**Official 150 baseline scope**: grasps ONLY the L1 layout (fails L3/L4 even at
-calibrated poses) — retraining is mandatory for L2–L5, exactly as the group chat said.
-
----
-
-## 9. Scripted-grasp fallback + collision-free nav — final results (2026-07-23)
-
-The 3000-epoch v2 retrain (105 marker-free demos) regressed at eval for reasons five
-falsification probes could not identify (empty-scene, open-loop replay, image-flip,
-config/normalization diff, early-epoch — all negative). Instead of betting on BC, the
-final architecture routes around it in the **participant-editable skills layer**:
-
-1. **Scripted-expert grasp fallback** (`skills/scripted_grasp.py`) — monkey-patches
-   `run_factory_sorting_grasp_in_wrapped_env` with the official collector's motion
-   primitives (lift → XY approach → descend → settle → close). Modes via
-   `ROBOT_AGENT_SCRIPTED_GRASP`: `fallback` (BC first, default) / `only` / `off`.
-   Must `env.reset()` before reading grasp sites (XML-local coords otherwise).
-2. **Pre-drive + transport-offset normalization** (`skills/pick_up.py`) — drives the
-   nav base to the calibrated grasp pose before attachment capture, then clamps
-   `relative_xy` to the L1-trained `[0.941, 0]` so place releases over the station
-   (fixes a 19 m arc sweep when nav base ≠ grasp base).
-3. **A\* obstacle inflation** (`core/navigation.py` + `core/map_loader.py`) — raw
-   occupancy grids let paths hug modules within 5 cm; the outstretched arm clips them
-   (latched judge collision → −5). `plan_world_path` now inflates obstacles with a
-   graceful 0.45 → 0.30 → 0.15 → 0 m margin ladder and **exempts endpoint
-   neighborhoods** (approach poses legitimately sit 5 cm from tables). Verified
-   offline (`probe_inflation.py`): mid-route clearance 0.05 → 0.46 m, zero endpoint
-   shift.
-
-**Final verified scores** (`run_level -Canonical [-ScriptedOnly] -Score`):
-
-| Level | Score | Path |
-|---|---|---|
-| L1 | **10 / 10** | BC-150 (fallback never fires) |
-| L3 | **20 / 20** | scripted grasp, zero collisions |
-| L4 | **25 / 25** | scripted grasp, zero collisions |
-| L2 | 0 / 15 | geometric block (tote inside production-line AABB, exceeds arm span) |
-| L5 | 0 / 30 | geometric block + A\* unreachable goal region |
-
-Submission zips: `pipeline/submissions/L{1,3,4}_20260723_1848*.zip`.
+Canonical packages and their machine-readable hash report are in
+`../submission_100_final_129e94a9/`.
 

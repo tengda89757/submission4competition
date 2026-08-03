@@ -20,7 +20,7 @@ Log "=== retrain_all start (markers hidden) ==="
 if (-not $SkipCollect) {
 & $VenvPy pipeline\collect_demos_multi.py --level L1 --num-rollouts 50 2>&1 | Out-File -Encoding utf8 pipeline\logs\recollect_l1.log
 Log "L1 collect exit=$LASTEXITCODE"
-& $VenvPy pipeline\collect_demos_multi.py --level L3 --object blue_tote_b01_near_left --num-rollouts 20 2>&1 | Out-File -Encoding utf8 pipeline\logs\recollect_l3.log
+& $VenvPy pipeline\collect_demos_multi.py --level L3 --object blue_tote_b01_near_right --num-rollouts 20 2>&1 | Out-File -Encoding utf8 pipeline\logs\recollect_l3.log
 Log "L3 collect exit=$LASTEXITCODE"
 & $VenvPy pipeline\collect_demos_multi.py --level L4 --num-rollouts 20 2>&1 | Out-File -Encoding utf8 pipeline\logs\recollect_l4.log
 Log "L4 collect exit=$LASTEXITCODE"
@@ -46,9 +46,9 @@ $run = Get-ChildItem pipeline\train_output -Directory | Sort-Object Name | Selec
 $ck  = Get-ChildItem $run.FullName -Recurse -Filter "model_epoch_$Epochs.pth" | Select-Object -First 1
 if (-not $ck) { $ck = Get-ChildItem $run.FullName -Recurse -Filter "model_epoch_*.pth" | Sort-Object LastWriteTime | Select-Object -Last 1 }
 Log ("eval ckpt: " + $ck.FullName)
-# recalibrate grasp poses for each level before its eval (config keys are shared)
+# Report live geometry-derived poses before evaluation (diagnostic only; no config writes).
 & $VenvPy pipeline\patch_grasp_pose.py --level L1 2>&1 | Out-Null
-& $VenvPy pipeline\patch_grasp_pose.py --level L3 --object blue_tote_b01_near_left 2>&1 | Out-Null
+& $VenvPy pipeline\patch_grasp_pose.py --level L3 --object blue_tote_b01_near_right 2>&1 | Out-Null
 & $VenvPy pipeline\patch_grasp_pose.py --level L4 2>&1 | Out-Null
 foreach ($lvl in @("L1","L3","L4")) {
     $r = powershell -ExecutionPolicy Bypass -NoProfile -File pipeline\eval_grasp.ps1 -Level $lvl -Checkpoint $ck.FullName 2>&1 |

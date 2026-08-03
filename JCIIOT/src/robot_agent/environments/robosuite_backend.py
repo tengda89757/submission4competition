@@ -346,6 +346,8 @@ class RobosuiteBackend:
         self._wrapped_env = None
         self._nav_env = None
         has_physics = getattr(self, "_has_physics", False)
+        if has_physics:
+            self._ensure_physics_policy()
         # Nav env: viewer on for physics, offscreen always available
         show_win = has_physics
         self._env = _make_env(
@@ -357,7 +359,6 @@ class RobosuiteBackend:
         )
         self._env.reset()
         if has_physics:
-            self._ensure_physics_policy()
             try:
                 _set_viewer_camera(self._env, "birdview", render_once=True)
             except Exception:
@@ -530,13 +531,7 @@ class RobosuiteBackend:
         return available
 
     def _env_grasp_object_candidates(self, source: str) -> list[str]:
-        """Return grasp-object candidates discovered from the current env.
-
-        For L5-like multi-object scenarios (input_1 with three white totes), restrict
-candidates to LEFT-side only (L3/L4/L5 erratum ruling): ignore right-group
-objects even if they share the same port_name (they're actually at output ports).
-This is a participant-level fix per PPT; core logic cannot be modified.
-        """
+        """Return grasp-object candidates discovered from the current env."""
         metadata = getattr(self.env, "material_metadata", {}) or {}
         material_objects = list(getattr(self.env, "material_objects", []) or [])
         source_names = [source]
@@ -545,18 +540,13 @@ This is a participant-level fix per PPT; core logic cannot be modified.
         elif source.startswith("input_"):
             source_names.append("line_" + source.split("_", 1)[1])
 
-        # L5-specific: input_1 has BOTH left-group (scoring objects) and right-group
-        # (side-table spares). We MUST select left-* only.
-        force_left_group = source == "input_1"
-
         candidates: list[str] = []
         for obj_name, info in metadata.items():
             if not isinstance(info, dict):
                 continue
             port_name = str(info.get("port_name") or "")
             if port_name in source_names:
-                if not force_left_group or obj_name.startswith("white_tote_b01_left_"):
-                    candidates.append(obj_name)
+                candidates.append(obj_name)
 
         for obj_name in material_objects:
             if any(
@@ -564,8 +554,7 @@ This is a participant-level fix per PPT; core logic cannot be modified.
                 or obj_name.startswith(f"{name}_")
                 for name in source_names
             ):
-                if not force_left_group or obj_name.startswith("white_tote_b01_left_"):
-                    candidates.append(obj_name)
+                candidates.append(obj_name)
         return candidates
 
     def _grasp_resolution_context(self) -> str:

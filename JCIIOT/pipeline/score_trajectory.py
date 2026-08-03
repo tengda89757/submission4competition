@@ -38,6 +38,7 @@ L5_INPUT1_OBJECTS = (
     "white_tote_b01_left_back",
 )
 MAX_SCORES = [10, 15, 20, 25, 30]
+OFFICIAL_REFERENCE_COMMIT = "129e94a9cff787031472045e19c24a4baeaefc48"
 
 
 def _json_safe(v):
@@ -68,6 +69,24 @@ _TASKS = _CFG.get("tasks", [])
 
 def _task(i: int) -> dict:
     return _TASKS[min(i, len(_TASKS) - 1)] if _TASKS else {}
+
+
+def _task_object_names(i: int) -> list[str]:
+    value = _task(i).get("object", "")
+    if isinstance(value, str):
+        return [value] if value else []
+    if isinstance(value, (list, tuple)):
+        return [str(item) for item in value if item]
+    return []
+
+
+def _object_name_matches(name: str, candidates: list[str]) -> bool:
+    if not candidates:
+        return True
+    name = str(name or "")
+    if not name:
+        return True
+    return any(candidate == name or candidate in name or name in candidate for candidate in candidates)
 
 
 def _level_to_index(level: str) -> int:
@@ -161,31 +180,38 @@ def score(task_index: int, trajectory: Path, object_override: str = "") -> dict:
     if task_index == 4:
         return _score_l5(task_index, frames, events, src_xy, tgt_xy, tgt_z)
 
-    # --object override matters when task_config's baseline object differs from the
-    # officially graded one (e.g. L3: config says orange, the docx rules blue).
-    obj_hint = object_override or _task(task_index).get("object", "")
+    obj_hints = [object_override] if object_override else _task_object_names(task_index)
     grasp_success = False
+    grasped_object_name = None
     for ev in events:
         if not isinstance(ev, dict) or ev.get("name") != "grasp_end":
             continue
         src_ok = not ev.get("source") or str(ev.get("source")) == _task(task_index).get("source")
         eo = str(ev.get("object_name") or "")
-        obj_ok = (not obj_hint) or (not eo) or (obj_hint in eo) or (eo in obj_hint)
+        obj_ok = _object_name_matches(eo, obj_hints)
         if src_ok and obj_ok and _event_success_value(ev.get("success")):
             grasp_success = True
+            grasped_object_name = eo or None
             break
 
     if not frames:
         return {"total": 0, "items": [], "error": "no frames"}
     last_positions = frames[-1].get("object_positions", {})
     px = py = pz = None
-    for name, pos in last_positions.items():
-        if obj_hint and obj_hint in name:
-            px, py, pz = float(pos[0]), float(pos[1]), float(pos[2])
+    score_candidates = []
+    if grasped_object_name:
+        score_candidates.append(grasped_object_name)
+    score_candidates.extend(obj_hints)
+    for candidate in score_candidates:
+        candidate_pos = _obj_pos(last_positions, candidate)
+        if candidate_pos is not None:
+            px, py, pz = candidate_pos
             break
     if px is None and last_positions:
         best = float("inf")
         for name, pos in last_positions.items():
+            if obj_hints and not _object_name_matches(str(name), obj_hints):
+                continue
             d = float(np.linalg.norm(np.array(pos[:2]) - tgt_xy))
             if d < best:
                 best, px, py, pz = d, float(pos[0]), float(pos[1]), float(pos[2])
@@ -267,6 +293,7 @@ def main(argv=None) -> int:
             "trajectory": str(args.trajectory),
             "score": result.get("total", 0),
             "score_rule_version": "grasp_success_gate_l5_multi_v2",
+            "official_reference_commit": OFFICIAL_REFERENCE_COMMIT,
             "details": result,
         }, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"Wrote {args.out}")

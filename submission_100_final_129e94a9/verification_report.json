@@ -1,0 +1,90 @@
+{
+  "official_reference_commit": "129e94a9cff787031472045e19c24a4baeaefc48",
+  "submissions_directory": "D:\\2026\\JCOII-2026\\JCIIOT2026-BIPT-EDU\\submission_100_final_129e94a9",
+  "reported_total": 100,
+  "recomputed_total": 100,
+  "maximum_total": 100,
+  "result": "PASS",
+  "packages": [
+    {
+      "level": "L1",
+      "package": "L1_20260803_141824.zip",
+      "package_sha256": "c161ac7b696263631f441bf400e0e2abcc6d4c4501f496c9c2b1d644c9670af9",
+      "trajectory_sha256": "b6e1763fc06c5ba7b4ced250ecbf6900261c3d938aa4175fa18e9399bcb7c15a",
+      "members": [
+        "score.json",
+        "submission_manifest.json",
+        "trajectory.json"
+      ],
+      "reported": 10,
+      "recomputed": 10,
+      "max": 10,
+      "manifest_reference": "129e94a9cff787031472045e19c24a4baeaefc48",
+      "status": "PASS"
+    },
+    {
+      "level": "L2",
+      "package": "L2_20260803_141825.zip",
+      "package_sha256": "9ca414fdd5ad28c4d477c7c9a022d36b1763dc2b71611dfed8f2f171e9f1fbbc",
+      "trajectory_sha256": "d47b9013b423d5e3b1d7c82d5161b5299ae4e08b6740f46a47e60a09c6d77f03",
+      "members": [
+        "score.json",
+        "submission_manifest.json",
+        "trajectory.json"
+      ],
+      "reported": 15,
+      "recomputed": 15,
+      "max": 15,
+      "manifest_reference": "129e94a9cff787031472045e19c24a4baeaefc48",
+      "status": "PASS"
+    },
+    {
+      "level": "L3",
+      "package": "L3_20260803_141826.zip",
+      "package_sha256": "f3947399694150ea2260f8d89ba138d7c9776d0196939dd102067a4cc4207305",
+      "trajectory_sha256": "201db5915e9538c6b329bba74d5f3db8e98534d0d9fbf87ae70ab82ac4fb089f",
+      "members": [
+        "score.json",
+        "submission_manifest.json",
+        "trajectory.json"
+      ],
+      "reported": 20,
+      "recomputed": 20,
+      "max": 20,
+      "manifest_reference": "129e94a9cff787031472045e19c24a4baeaefc48",
+      "status": "PASS"
+    },
+    {
+      "level": "L4",
+      "package": "L4_20260803_141827.zip",
+      "package_sha256": "24ff27567e9781186a2adcca938bffc7e28416faa9c7e4bbd1322653c9db7619",
+      "trajectory_sha256": "bb578476a4293a73bb85c78e3e84d7ffe79fb667e2d2092c0ba15bcfc75c07d9",
+      "members": [
+        "score.json",
+        "submission_manifest.json",
+        "trajectory.json"
+      ],
+      "reported": 25,
+      "recomputed": 25,
+      "max": 25,
+      "manifest_reference": "129e94a9cff787031472045e19c24a4baeaefc48",
+      "status": "PASS"
+    },
+    {
+      "level": "L5",
+      "package": "L5_20260803_141828.zip",
+      "package_sha256": "d1848aa16f2a0618c1114951e2a3b73b017fd162d6abf695e91d2bf770211983",
+      "trajectory_sha256": "78e6133da92e2b18350641b5f624b2d027af0761a90c764af108bf0eae1541dc",
+      "members": [
+        "score.json",
+        "submission_manifest.json",
+        "trajectory.json"
+      ],
+      "reported": 30,
+      "recomputed": 30,
+      "max": 30,
+      "manifest_reference": "129e94a9cff787031472045e19c24a4baeaefc48",
+      "status": "PASS"
+    }
+  ]
+}

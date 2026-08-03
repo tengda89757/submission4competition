@@ -39,6 +39,7 @@ class MoveSkill(BaseSkill):
         self._scene = scene_context
         self._grid = grid
         self._path_spacing = path_spacing
+        self._station_visits: dict[str, int] = {}
 
     # ── public API ──────────────────────────────────────────
 
@@ -103,10 +104,16 @@ class MoveSkill(BaseSkill):
         1. Known station name via ``SceneContext.approach_xy()``
         2. Direct (x, y) tuple in the target string
         """
-        # 1) named station
-        for name in self._scene.all_port_names():
+        # 1) named station.  Resolve an exact name before accepting names
+        # embedded in natural-language targets: ``output_1`` is otherwise a
+        # substring of the official auxiliary port ``aux_output_1``.
+        names = self._scene.all_port_names()
+        exact = target.strip()
+        if exact in names:
+            return self._station_goal(exact)
+        for name in sorted(names, key=len, reverse=True):
             if name in target:
-                return self._scene.approach_xy(name)
+                return self._station_goal(name)
 
         # 2) numeric "x, y"
         nums = re.findall(r"[-+]?\d*\.?\d+", target)
@@ -117,6 +124,28 @@ class MoveSkill(BaseSkill):
                 pass
 
         return None
+
+    def _station_goal(self, name: str) -> np.ndarray:
+        """Return a physical approach goal, staggering L5's three drops."""
+        goal = self._scene.approach_xy(name)
+        if name != "aux_output_1":
+            return goal
+
+        visit = self._station_visits.get(name, 0)
+        self._station_visits[name] = visit + 1
+        lateral = (0.0, 0.38, -0.38)[visit % 3]
+        station = self._scene.output_ports.get(name)
+        if station is None or abs(lateral) < 1e-9:
+            return goal
+        toward_table = np.asarray(station.center[:2], dtype=float) - goal
+        norm = float(np.linalg.norm(toward_table))
+        if norm < 1e-9:
+            return goal
+        toward_table /= norm
+        right = np.array([toward_table[1], -toward_table[0]], dtype=float)
+        staggered = goal + lateral * right
+        print(f"[MOVE] {name} visit {visit + 1}: lateral goal {lateral:+.2f}m", flush=True)
+        return staggered
 
     def _plan(
         self, start_xy: np.ndarray, goal_xy: np.ndarray,

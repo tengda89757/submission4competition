@@ -3,8 +3,8 @@ inspect_scenes.py — Ground-truth scene audit for L2–L5.
 
 Creates each FactorySorting scene headless and dumps every material object, its
 position, and its port mapping (material_metadata.port_name). This settles
-data-driven questions before running tasks, e.g. WHICH object actually sits at
-L3's input_6 (docx says a blue bin; task_config's orange is baseline-only).
+data-driven questions before running tasks, e.g. which official blue candidate
+sits at L3's ``aux_input_1`` placement point.
 
 Usage:  .venv\\Scripts\\python pipeline\\inspect_scenes.py [--scenes 3 5 7 9]
 """

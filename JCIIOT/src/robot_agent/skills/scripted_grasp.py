@@ -40,8 +40,9 @@ _installed = False
 
 # ── rotated-approach grasp overrides ──────────────────────────────────
 # Objects whose MODEL grasp sites are buried inside scene AABB collision proxies
-# (L2 green totes: production_line_6 swallows the west site up to z=1.9; L5 white
-# totes: input_1 table blocks the south standing). The open face is reachable by
+# (L2 green totes: production_line_6 swallows the west site up to z=1.9; L3 right
+# blue totes: the auxiliary table blocks east standing; L5 white totes: input_1
+# table blocks the south standing). The open face is reachable by
 # rotating the whole grasp geometry around the object centre and gripping the
 # perpendicular wall with virtual sites. Isolated-env verification: L2 upper 2/2,
 # L5 back 2/2 + center 1/1 + front 1/1 (collect_demos_multi --approach-rot 90).
@@ -50,6 +51,8 @@ _installed = False
 ROTATED_GRASP_OVERRIDES: dict[str, dict] = {
     "green_tote_b01_lower":       {"rot_deg": 90.0, "forward": 0.315, "lateral": 0.11},
     "green_tote_b01_upper":       {"rot_deg": 90.0, "forward": 0.315, "lateral": 0.11},
+    "blue_tote_b01_far_right":    {"rot_deg": -90.0, "forward": 0.315, "lateral": 0.11},
+    "blue_tote_b01_near_right":   {"rot_deg": -90.0, "forward": 0.315, "lateral": 0.11},
     "white_tote_b01_left_front":  {"rot_deg": 90.0, "forward": 0.315, "lateral": 0.11},
     "white_tote_b01_left_center": {"rot_deg": 90.0, "forward": 0.315, "lateral": 0.11},
     "white_tote_b01_left_back":   {"rot_deg": 90.0, "forward": 0.315, "lateral": 0.11},
@@ -110,6 +113,36 @@ def compute_rotated_base_pose(raw_env, object_name):
                     pass
     pose = _ROTATED_POSE_CACHE.get(object_name)
     return dict(pose) if pose else None
+
+
+def compute_natural_base_pose(raw_env, object_name):
+    """Compute the trained base pose from an object's official grasp sites.
+
+    This keeps scene-specific calibration in the participant-editable skill
+    layer instead of rewriting the locked ``knowledge/task_config.json`` file.
+    """
+    if raw_env is None or not object_name:
+        return None
+    try:
+        obj = np.array(raw_env.sim.data.body_xpos[raw_env.obj_body_id[object_name]])
+        r = np.array(raw_env.sim.data.site_xpos[
+            raw_env.sim.model.site_name2id(f"{object_name}_right_grasp_site")])
+        l = np.array(raw_env.sim.data.site_xpos[
+            raw_env.sim.model.site_name2id(f"{object_name}_left_grasp_site")])
+        direction = ((r + l) / 2.0)[:2] - obj[:2]
+        norm = float(np.linalg.norm(direction))
+        if norm < 1e-9:
+            return None
+        direction /= norm
+        base_xy = obj[:2] + TRAINED_BASE_DIST * direction
+        yaw = float(np.arctan2(-direction[1], -direction[0]))
+        return {
+            "robot_base_pos": [float(base_xy[0]), float(base_xy[1]), 0.0],
+            "robot_base_ori": [0.0, 0.0, yaw],
+        }
+    except Exception:
+        logger.debug("natural pose: cannot read %s geometry", object_name)
+        return None
 
 
 def _compute_rotated_base_pose_live(raw_env, object_name):

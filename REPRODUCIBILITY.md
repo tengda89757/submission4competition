@@ -79,11 +79,11 @@ Expected output:
 ```
 Level Package                      Reported  Recomputed  Max  Result
 --------------------------------------------------------------------------
-L1    L1_20260723_213458.zip             10          10   10  PASS
-L2    L2_20260723_213640.zip             15          15   15  PASS
-L3    L3_20260723_213500.zip             20          20   20  PASS
-L4    L4_20260723_213500.zip             25          25   25  PASS
-L5    L5_20260723_213501.zip             30          30   30  PASS
+L1    L1_20260803_141824.zip             10          10   10  PASS
+L2    L2_20260803_141825.zip             15          15   15  PASS
+L3    L3_20260803_141826.zip             20          20   20  PASS
+L4    L4_20260803_141827.zip             25          25   25  PASS
+L5    L5_20260803_141828.zip             30          30   30  PASS
 --------------------------------------------------------------------------
 TOTAL                                   100         100  100
 
@@ -94,8 +94,8 @@ To score a single trajectory manually:
 
 ```powershell
 .venv\Scripts\python.exe pipeline\score_trajectory.py --trajectory <path\to\trajectory.json> --level L1
-# L3 uses the official docx erratum object (blue transfer bin):
-.venv\Scripts\python.exe pipeline\score_trajectory.py --trajectory <L3 traj.json> --level L3 --object blue_tote_b01_near_left
+# L3 current official candidates are the right-side blue transfer bins:
+.venv\Scripts\python.exe pipeline\score_trajectory.py --trajectory <L3 traj.json> --level L3 --object blue_tote_b01_near_right
 ```
 
 This path needs **no GPU, no LLM, no rendering** — only the scene maps bundled in
@@ -126,10 +126,12 @@ and (with `-Score`) a `score_<ts>.json` next to it. `finalize_all.ps1` additiona
 packages each level into `pipeline\submissions\`.
 
 **Per-level notes** (baked into the scripts so runs are reproducible):
-- L3 grades the **blue** transfer bin (docx erratum), passed as
-  `-ObjectName blue_tote_b01_near_left`; `task_config.json`'s orange object is the
-  baseline only.
-- L5 transports the three `white_tote_b01_left_*` bins one at a time in a fixed order.
+
+- The task definition is pinned to official commit `129e94a9cff787031472045e19c24a4baeaefc48`.
+- L3 runs `aux_input_1 → output_5` and grades
+  `blue_tote_b01_far_right` / `blue_tote_b01_near_right`.
+- L5 runs `input_1 → aux_output_1` and transports the three
+  `white_tote_b01_left_*` bins one at a time in a fixed order.
 - The BC checkpoint defaults to the official `model_epoch_150.pth`; `run_level.ps1
   -Checkpoint <path>` selects another.
 
@@ -137,8 +139,8 @@ packages each level into `pipeline\submissions\`.
 
 ## 5. What Each Submission ZIP Contains
 
-Each `L*_*.zip` in the top-level `submissions/` folder (the five official
-deliverables) contains:
+The canonical final packages are in `submission_100_final_129e94a9/` and are
+mirrored in `submissions/` for the default verifier. Each ZIP contains exactly:
 
 - `trajectory.json` — full per-frame state log (base pose, joint angles, object poses, grasp events).
 - `score.json` — objective breakdown under `grasp_success_gate_l5_multi_v2`.

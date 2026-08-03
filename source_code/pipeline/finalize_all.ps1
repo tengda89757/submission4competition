@@ -20,7 +20,7 @@
 param(
     [string[]]$Levels = @("L1","L2","L3","L4","L5"),
     [string]$Checkpoint = "",
-    [string]$Team = "BIPT-EDU"
+    [string]$Team = "AutoPipeline"
 )
 $ErrorActionPreference = "Continue"
 $AppDir = Split-Path $PSScriptRoot -Parent
@@ -41,7 +41,7 @@ $official = Join-Path $AppDir "robosuite\robosuite\model_epoch_150.pth"
 Log ("v2 ckpt: " + $(if ($v2) { $v2.FullName } else { "NOT FOUND" }))
 
 # per-level object overrides (erratum-synced)
-$objOverride = @{ L3 = "blue_tote_b01_near_left" }
+$objOverride = @{ L3 = "blue_tote_b01_far_right" }
 
 # parse eval results from retrain_all.log: lines like "eval L3: ... Final grasp status: True"
 $evalPass = @{}
@@ -74,7 +74,7 @@ foreach ($lvl in $Levels) {
     # package newest OK trajectory (package_submission picks it up automatically)
     & powershell.exe -ExecutionPolicy Bypass -NoProfile -File (Join-Path $PSScriptRoot "package_submission.ps1") `
         -Level $lvl -Team $Team `
-        -MethodSummary "Erratum-synced task_config; site-geometry grasp-pose calibration; multi-scene BC retrain (105 demos, markers hidden, 3000 ep) with official-150 fallback; canonical prompts; headless pipeline" `
+        -MethodSummary "Official commit 129e94a9 task semantics; physics-generated trajectory; scripted-expert grasp fallback; site-geometry grasp calibration; collision-aware A* navigation" `
         2>&1 | Add-Content (Join-Path $PSScriptRoot "logs\finalize_$lvl.log")
     Log ("$lvl package exit=$LASTEXITCODE")
 
@@ -83,7 +83,7 @@ foreach ($lvl in $Levels) {
            Sort-Object LastWriteTime | Select-Object -Last 1
     $total = "?"
     if ($rec) {
-        try { $total = (Get-Content $rec.FullName -Raw | ConvertFrom-Json).total } catch {}
+        try { $total = (Get-Content $rec.FullName -Raw | ConvertFrom-Json).score } catch {}
     }
     $summary += ("{0}: ckpt={1} score={2}" -f $lvl, $(if ($ck) { Split-Path $ck -Leaf } else { "150" }), $total)
     Log ("$lvl score=$total")

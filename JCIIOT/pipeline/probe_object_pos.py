@@ -2,7 +2,7 @@
 (include_material_objects=False, used by patch_grasp_pose) and the FULL runtime env
 (include_material_objects=True, used by the backend's grasp env).
 
-Usage: .venv\\Scripts\\python pipeline\\probe_object_pos.py FactorySorting5_3FO3ERTPXEUT blue_tote_b01_near_left
+Usage: .venv\\Scripts\\python pipeline\\probe_object_pos.py FactorySorting5_3FO3ERTPXEUT blue_tote_b01_near_right
 """
 import sys
 from pathlib import Path
@@ -23,7 +23,7 @@ from robosuite.environments.factory_sorting.factory_sorting_5_3fo3ertpxeut impor
 from robosuite.environments.factory_sorting.factory_sorting_7_3fo3erfky9rn import FactorySorting7_3FO3ERFKY9RN  # noqa
 
 env_name = sys.argv[1] if len(sys.argv) > 1 else "FactorySorting5_3FO3ERTPXEUT"
-obj = sys.argv[2] if len(sys.argv) > 2 else "blue_tote_b01_near_left"
+obj = sys.argv[2] if len(sys.argv) > 2 else "blue_tote_b01_near_right"
 
 for include in (False, True):
     env = suite.make(env_name, robots="Tiago", has_renderer=False, has_offscreen_renderer=True,

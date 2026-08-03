@@ -7,7 +7,10 @@
       "env_name": "FactorySorting1_3FO3ERFHISEM",
       "source": "input_5",
       "target": "output_4",
-      "object": "line_5_container_h01_near",
+      "object": [
+        "line_5_container_h01_near",
+        "line_5_container_h01_far"
+      ],
       "max_score": 10
     },
     {
@@ -16,16 +19,22 @@
       "env_name": "FactorySorting3_3FO3ERRPH7X9",
       "source": "input_6",
       "target": "output_4",
-      "object": "green_tote_b01_lower",
+      "object": [
+        "green_tote_b01_upper",
+        "green_tote_b01_lower"
+      ],
       "max_score": 15
     },
     {
       "level": "L3",
       "scene_prefix": "factory_sorting_5_3fo3ertpxeut",
       "env_name": "FactorySorting5_3FO3ERTPXEUT",
-      "source": "input_6",
+      "source": "aux_input_1",
       "target": "output_5",
-      "object": "blue_tote_b01_near_left",
+      "object": [
+         "blue_tote_b01_far_right",
+         "blue_tote_b01_near_right"
+      ],
       "max_score": 20
     },
     {
@@ -34,7 +43,10 @@
       "env_name": "FactorySorting7_3FO3ERFKY9RN",
       "source": "input_2",
       "target": "output_5",
-      "object": "blue_container_h01_back_upper",
+      "object": [
+        "blue_container_h01_back_upper",
+        "blue_container_h01_back_lower"
+      ],
       "max_score": 25
     },
     {
@@ -42,27 +54,31 @@
       "scene_prefix": "factory_sorting_9_3fo3ert2c5fp",
       "env_name": "FactorySorting9_3FO3ERT2C5FP",
       "source": "input_1",
-      "target": "output_6",
-      "object": "white_tote_b01_left_center",
+      "target": "aux_output_1",
+      "object": [
+        "white_tote_b01_left_center",
+        "white_tote_b01_left_front",
+        "white_tote_b01_left_back"
+      ],
       "max_score": 30
     }
   ],
   "grasp_poses": {
     "input_1": {
       "pos": [
-        -13.733088,
-        4.954705,
+        5.03,
+        -3.84,
         0.0
       ],
-      "yaw": 3.141593
+      "yaw": -3.14
     },
     "input_2": {
       "pos": [
-        -8.907312,
-        5.343394,
+        8.56,
+        -3.92,
         0.0
       ],
-      "yaw": -3.141593
+      "yaw": -3.14
     },
     "input_3": {
       "pos": [
@@ -82,7 +98,7 @@
     },
     "input_5": {
       "pos": [
-        8.000001,
+        8.0,
         4.6,
         0.0
       ],
@@ -90,11 +106,11 @@
     },
     "input_6": {
       "pos": [
-        -4.657134,
-        8.493707,
+        6.0,
+        4.8,
         0.0
       ],
-      "yaw": -3.141593
+      "yaw": -3.139453
     }
   },
   "default_object_map": {

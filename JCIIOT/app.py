@@ -105,8 +105,27 @@ def _task_source_name(task_index: int) -> str:
 def _task_target_name(task_index: int) -> str:
     return _task_for_index(task_index).get("target", "output_4")
 
+def _coerce_object_names(value) -> list[str]:
+    if isinstance(value, str):
+        return [value] if value else []
+    if isinstance(value, (list, tuple)):
+        return [str(item) for item in value if item]
+    return []
+
+def _task_object_names(task_index: int) -> list[str]:
+    return _coerce_object_names(_task_for_index(task_index).get("object", ""))
+
 def _task_object_name(task_index: int) -> str:
-    return _task_for_index(task_index).get("object", "")
+    names = _task_object_names(task_index)
+    return names[0] if names else ""
+
+def _object_name_matches(name: str, candidates: list[str]) -> bool:
+    if not candidates:
+        return True
+    name = str(name or "")
+    if not name:
+        return True
+    return any(candidate == name or candidate in name or name in candidate for candidate in candidates)
 
 def _task_grasp_pose(source: str) -> tuple | None:
     poses = _TASK_CFG.get("grasp_poses", {})
@@ -883,7 +902,7 @@ def render_sidebar() -> None:
     _render_vlm_section()
 
 
-    # 鈹€鈹€ Grasp test 鈹€鈹€
+    # ── Grasp test ──
     st.sidebar.divider()
     st.sidebar.subheader("Grasp Test")
     _render_grasp_test()
@@ -1142,7 +1161,7 @@ def render_quick_actions() -> None:
         action, added = st.session_state.pop("_kb_op")
         st.sidebar.success(f"Knowledge base refreshed: +{added} docs")
 
-    # 鈹€鈹€ Trajectory replay 鈹€鈹€
+    # ── Trajectory replay ──
     st.sidebar.divider()
     st.sidebar.subheader("Trajectory Replay")
     _render_replay_section()
@@ -1527,7 +1546,7 @@ def _execute_physics_pipeline(task: str, task_index: int = 0) -> None:
     except Exception:
         pass
 
-    # 鈹€鈹€ Extract key diagnostics from stdout 鈹€鈹€
+    # ── Extract key diagnostics from stdout ──
     _diag_lines: list[str] = []
     for _kw in ("grasp_status", "fingerpad contact", "gripper end distance",
                 "gripper end deltas", "gripper end targets", "gripper end positions",
@@ -1885,7 +1904,7 @@ def _score_steps(task_index: int) -> dict:
     # Weights: leave source (30%), arrive near target (30%), rest on table (40%)
     empty = {"total": 0, "items": []}
 
-    # 鈹€鈹€ Source/target: read dynamically from each scene's map 鈹€鈹€
+    # ── Source/target: read dynamically from each scene's map ──
     _SRC_NAMES = [_task_source_name(i) for i in range(5)]
     _TGT_NAMES = [_task_target_name(i) for i in range(5)]
     try:
@@ -1907,15 +1926,17 @@ def _score_steps(task_index: int) -> dict:
                 _tgt_z = float(_tgt.center[2])
         except Exception:
             pass
-        obj_hint = _task_object_name(task_index)
+        obj_hints = _task_object_names(task_index)
         if task_index == 4:
             return _score_l5_multi_object(task_index, src_xy, tgt_xy, _tgt_z)
     except Exception:
         return empty
 
-    # 鈹€鈹€ Read object positions from the LAST TRAJECTORY FRAME 鈹€鈹€
+    # ── Read object positions from the LAST TRAJECTORY FRAME ──
     # A fresh env reset sends objects back to spawn; use trajectory JSON instead.
     grasp_success = False
+    grasped_object_name = None
+    best_obj = None
     try:
         import json as _json
         _last_traj = st.session_state.get("_last_trajectory")
@@ -1930,33 +1951,35 @@ def _score_steps(task_index: int) -> dict:
                     _event_source = str(_event.get("source") or "")
                     _event_object = str(_event.get("object_name") or "")
                     _source_ok = not _event_source or _event_source == _SRC_NAMES[task_index]
-                    _object_ok = (
-                        not obj_hint
-                        or not _event_object
-                        or obj_hint in _event_object
-                        or _event_object in obj_hint
-                    )
+                    _object_ok = _object_name_matches(_event_object, obj_hints)
                     _success_value = _event.get("success")
                     _success_ok = _event_success_value(_success_value)
                     if _source_ok and _object_ok and _success_ok:
                         grasp_success = True
+                        grasped_object_name = _event_object or None
                         break
             _frames = _traj.get("frames", [])
             if _frames:
                 # Last frame has the final object positions
                 _last_frame = _frames[-1]
                 _obj_positions = _last_frame.get("object_positions", {})
-                # Find the right object
                 px = py = pz = None
-                for obj_name, pos in _obj_positions.items():
-                    if obj_hint and obj_hint in obj_name:
+                score_candidates = []
+                if grasped_object_name:
+                    score_candidates.append(grasped_object_name)
+                score_candidates.extend(obj_hints)
+                for candidate in score_candidates:
+                    pos = _trajectory_object_position(_obj_positions, candidate)
+                    if pos is not None:
                         px, py, pz = float(pos[0]), float(pos[1]), float(pos[2])
-                        best_obj = obj_name
+                        best_obj = candidate
                         break
                 if px is None and _obj_positions:
-                    # Pick the one nearest to target
+                    # Pick the scored candidate nearest to target.
                     best_dist = float("inf")
                     for obj_name, pos in _obj_positions.items():
+                        if obj_hints and not _object_name_matches(obj_name, obj_hints):
+                            continue
                         d = float(np.linalg.norm(np.array(pos[:2]) - tgt_xy))
                         if d < best_dist:
                             best_dist, best_obj = d, obj_name
@@ -1970,12 +1993,12 @@ def _score_steps(task_index: int) -> dict:
     except Exception:
         return empty
 
-    # 鈹€鈹€ Compute distances first 鈹€鈹€
+    # ── Compute distances first ──
     dx_src = abs(px - src_xy[0])
     dy_src = abs(py - src_xy[1])
     dist_tgt = float(np.linalg.norm(np.array([px, py]) - tgt_xy))  # XY only, z checked separately
 
-    # 鈹€鈹€ Debug: dump coordinates 鈹€鈹€
+    # ── Debug: dump coordinates ──
     try:
         debug_lines = [
             f"Object x={px:.3f} y={py:.3f} z={pz:.3f}",
@@ -1987,7 +2010,7 @@ def _score_steps(task_index: int) -> dict:
     except Exception:
         st.session_state["_score_debug"] = []
 
-    # 鈹€鈹€ Score: 2 checkpoints 鈹€鈹€
+    # ── Score: 2 checkpoints ──
     _half = max(1, _max // 2)
     _w_leave = _half
     _w_place = _max - _w_leave
@@ -2004,7 +2027,7 @@ def _score_steps(task_index: int) -> dict:
     ]
     total = sum(it["score"] for it in items if it["ok"])
 
-    # 鈹€鈹€ Collision penalty: -5 if collision detected in trajectory 鈹€鈹€
+    # ── Collision penalty: -5 if collision detected in trajectory ──
     _collision = False
     try:
         import json as _json2
@@ -2159,7 +2182,7 @@ def render_input_panel() -> None:
         return
 
 
-    # 鈹€鈹€ Competition task grid: 5 tasks, 10/15/20/25/30 pts 鈹€鈹€
+    # ── Competition task grid: 5 tasks, 10/15/20/25/30 pts ──
     TASKS = [
         {
             "level": "L1",
@@ -2288,7 +2311,7 @@ def render_input_panel() -> None:
         with c4:
             st.caption(st.session_state["_task_times"].get(i, "-"))
 
-    # 鈹€鈹€ Auto-replay: generate GIF after scores are shown 鈹€鈹€
+    # ── Auto-replay: generate GIF after scores are shown ──
     _pending = st.session_state.pop("_pending_replay", None)
     if AUTO_GENERATE_REPLAY_GIFS and _pending and Path(_pending).exists():
         traj_path = Path(_pending)
@@ -2872,7 +2895,7 @@ def render_result_panel() -> None:
     if subprocess_warning:
         st.warning(subprocess_warning)
 
-    # 鈹€鈹€ Show last physics diag output if available 鈹€鈹€
+    # ── Show last physics diag output if available ──
     _last_diag_files = st.session_state.get("_last_physics_files", {})
     if _last_diag_files.get("diag"):
         import pathlib

@@ -43,7 +43,7 @@ $LevelIndex = @{ L1=0; L2=1; L3=2; L4=3; L5=4 }[$Level]
 $DESC = @{
  L1 = 'For this task, you need to transport a blue, hollow plastic box. Please move it from the starting point Pick Station 2 to the destination Place Station 3. Please follow the Standard Operating Procedure (SOP).'
  L2 = 'Current Task Material Information. Material Name: Green-rimmed storage bin. Starting Location: Pick Station 1. Target Location: Place Station 3. Quantity to Transport: 1.'
- L3 = 'Please follow the SOP. The object is a blue material transfer bin. The Pick Station is Pick Station 1, and the Place Station is Place Station 2.'
+ L3 = 'Please follow the SOP. The object is a blue material transfer bin. The Pick Station is Placement Point 1, and the Place Station is Place Station 2.'
  L4 = 'Please strictly adhere to the Standard Operating Procedure (SOP) for this task. The object to be handled is a blue, hollow plastic box. The Pick Station is designated as Pick Station 5, and the Place Station is designated as Place Station 2.'
  L5 = 'Move the three white-rimmed storage bins from Pick Station 6 to Place Station 1.'
 }
@@ -58,13 +58,13 @@ $envName = $taskCfg.env_name
 # object (e.g. L3 erratum: pick from Placement Point 1 = side table blue tote).
 if ($Canonical) {
     $src = $taskCfg.source; $tgt = $taskCfg.target
-    $obj = if ($ObjectName) { $ObjectName } else { $taskCfg.object }
-    # grasp_poses is keyed by source port and shared across scenes — recalibrate it
-    # for THIS scene/object right before running (pipeline/patch_grasp_pose.py).
-    & $VenvPy (Join-Path $PSScriptRoot "patch_grasp_pose.py") --level $Level --object $obj 2>&1 |
-        Where-Object { $_ -match 'computed|patched|Error' } | ForEach-Object { Write-Host $_ -ForegroundColor DarkCyan }
+    $configuredObjects = @($taskCfg.object) | Where-Object { $_ } | ForEach-Object { [string]$_ }
+    $obj = if ($ObjectName) { $ObjectName } else { $configuredObjects | Select-Object -First 1 }
+    if (-not $obj) { Write-Host "No configured object for $Level" -ForegroundColor Red; exit 1 }
+    # The pick-up skill computes its base pose from live object/grasp-site
+    # geometry; the official locked task_config.json remains byte-for-byte intact.
     if ($Level -eq "L5") {
-        $objs = @("white_tote_b01_left_center","white_tote_b01_left_front","white_tote_b01_left_back")
+        $objs = $configuredObjects
         $steps = ($objs | ForEach-Object { "move to $src, pick up $_ at $src, move to $tgt, place down at $tgt" }) -join "; then "
         $Task = "Transport three objects from $src to $tgt one at a time, strictly in this order: $steps."
     } else {

@@ -1,7 +1,7 @@
 <#
   collect_multi.ps1 — background-friendly wrapper for collect_demos_multi.py.
   Usage:
-    powershell -ExecutionPolicy Bypass -File pipeline\collect_multi.ps1 -Level L3 -Object blue_tote_b01_near_left -NumRollouts 20
+    powershell -ExecutionPolicy Bypass -File pipeline\collect_multi.ps1 -Level L3 -Object blue_tote_b01_near_right -NumRollouts 20
 #>
 param(
     [ValidateSet("L1","L2","L3","L4","L5")][string]$Level = "L1",

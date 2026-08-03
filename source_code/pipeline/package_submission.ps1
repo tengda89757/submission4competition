@@ -62,6 +62,7 @@ $manifest = [ordered]@{
     max_score         = $task.max_score
     objective_score   = $scoreVal
     score_rule_version= "grasp_success_gate_l5_multi_v2"
+    official_reference_commit = "129e94a9cff787031472045e19c24a4baeaefc48"
     method_summary    = $MethodSummary
     team              = $Team
     source_trajectory = $Trajectory
