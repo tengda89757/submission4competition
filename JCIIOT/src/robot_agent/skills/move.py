@@ -13,6 +13,81 @@ from robot_agent.skills.base import BaseSkill
 logger = logging.getLogger(__name__)
 
 
+def _inflate_obstacles(grid: np.ndarray, margin_cells: int) -> np.ndarray:
+    """Dilate impassable cells without modifying the official grid."""
+    from robot_agent.core.navigation import OBSTACLE, PASSABLE
+
+    if margin_cells <= 0:
+        return grid
+    impassable = ~np.isin(grid, list(PASSABLE))
+    dilated = impassable.copy()
+    for dr in range(-margin_cells, margin_cells + 1):
+        for dc in range(-margin_cells, margin_cells + 1):
+            if (dr == 0 and dc == 0) or dr * dr + dc * dc > margin_cells * margin_cells:
+                continue
+            src_r = slice(max(0, -dr), impassable.shape[0] - max(0, dr))
+            dst_r = slice(max(0, dr), impassable.shape[0] - max(0, -dr))
+            src_c = slice(max(0, -dc), impassable.shape[1] - max(0, dc))
+            dst_c = slice(max(0, dc), impassable.shape[1] - max(0, -dc))
+            dilated[dst_r, dst_c] |= impassable[src_r, src_c]
+    inflated = grid.copy()
+    inflated[dilated & ~impassable] = OBSTACLE
+    return inflated
+
+
+def plan_clearance_world_path(
+    scene: dict,
+    grid: np.ndarray,
+    start_xy: np.ndarray,
+    goal_xy: np.ndarray,
+    *,
+    min_spacing: float = 0.35,
+) -> list[np.ndarray]:
+    """Plan in the editable skill layer using a conservative-to-raw ladder.
+
+    Endpoint neighborhoods are restored from the official occupancy grid so a
+    legitimate station approach is not swallowed by obstacle dilation. If a
+    conservative margin is infeasible, the next smaller margin is attempted;
+    the final attempt is the unmodified official grid.
+    """
+    from robot_agent.core.navigation import (
+        astar,
+        grid_to_world,
+        simplify_path,
+        world_to_grid,
+    )
+
+    bounds = scene.get("bounds") or {}
+    resolution = float(scene.get("resolution", 0.05))
+    start_cell = world_to_grid(start_xy[0], start_xy[1], bounds, resolution)
+    goal_cell = world_to_grid(goal_xy[0], goal_xy[1], bounds, resolution)
+    last_error: Exception | None = None
+
+    for margin_m in (0.45, 0.30, 0.15, 0.0):
+        margin_cells = int(round(margin_m / resolution))
+        candidate = _inflate_obstacles(grid, margin_cells)
+        if margin_cells > 0:
+            candidate = candidate.copy()
+            for cell in (start_cell, goal_cell):
+                r0 = max(0, cell[0] - margin_cells - 2)
+                r1 = min(grid.shape[0], cell[0] + margin_cells + 3)
+                c0 = max(0, cell[1] - margin_cells - 2)
+                c1 = min(grid.shape[1], cell[1] + margin_cells + 3)
+                candidate[r0:r1, c0:c1] = grid[r0:r1, c0:c1]
+        try:
+            cells = astar(candidate, start_cell, goal_cell)
+            world = [
+                grid_to_world(row, col, bounds, resolution)
+                for row, col in cells
+            ]
+            logger.info("skill-layer A*: margin=%.2fm cells=%d", margin_m, len(cells))
+            return simplify_path(world, min_spacing=min_spacing)
+        except RuntimeError as exc:
+            last_error = exc
+
+    raise RuntimeError(f"A* failed at every clearance margin: {last_error}")
+
+
 class MoveSkill(BaseSkill):
     """Navigate the mobile base to a named station or world coordinate.
 
@@ -151,14 +226,12 @@ class MoveSkill(BaseSkill):
         self, start_xy: np.ndarray, goal_xy: np.ndarray,
     ) -> list[np.ndarray] | None:
         """Run A* and return a world-frame path, or None on failure."""
-        from robot_agent.core.map_loader import plan_world_path
-
         try:
             scene_dict = {
                 "bounds": self._scene.bounds,
                 "resolution": self._scene.resolution,
             }
-            return plan_world_path(
+            return plan_clearance_world_path(
                 scene_dict, self._grid, start_xy, goal_xy,
                 min_spacing=self._path_spacing,
             )

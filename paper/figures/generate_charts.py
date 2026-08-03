@@ -59,8 +59,8 @@ def create_system_architecture_diagram():
     box(0.50, 0.24, 0.18, 0.10, "#FB8C00", "Skill Registry")
     box(0.17, 0.55, 0.20, 0.13, "#00ACC1", "LLM Planner\n(Qwen2.5:7B)")
     box(0.83, 0.55, 0.20, 0.13, "#8E24AA", "Environment\n(MuJoCo/Robosuite)")
-    cloud(0.83, 0.22, 0.26, 0.11, "#D81B60", "Memory /\nInstrumentation")
-    cloud(0.17, 0.22, 0.24, 0.11, "#D81B60", "Replay Buffer")
+    cloud(0.83, 0.22, 0.26, 0.11, "#D81B60", "Strict Verifier\n+ SHA-256")
+    cloud(0.17, 0.22, 0.26, 0.11, "#D81B60", "Official Task Config\n(read-only)")
 
     def arrow(x1, y1, x2, y2, label="", lx=None, ly=None):
         ax.annotate("", xy=(x2, y2), xytext=(x1, y1),
@@ -87,7 +87,7 @@ def create_system_architecture_diagram():
     arrow(0.40, 0.49, 0.25, 0.30, "")
 
     ax.text(0.5, 0.04,
-            "Boxes = Core Components   |   Ellipses = Supporting Mechanisms   |   Arrows = Data Flow",
+            "Boxes = Runtime Components   |   Ellipses = Read-only / Audit Inputs   |   Arrows = Data Flow",
             ha="center", fontsize=9, style="italic", color="#555555")
 
     ax.set_xlim(0, 1)
@@ -102,41 +102,46 @@ def create_system_architecture_diagram():
 # =====================================================================
 def create_grasp_comparison():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-    lim = (-0.32, 0.32)
+    lim = (-1.05, 1.05)
 
     for ax in (ax1, ax2):
         ax.set_xlim(lim); ax.set_ylim(lim); ax.set_aspect("equal")
         ax.grid(True, alpha=0.3); ax.set_xlabel("X (m)"); ax.set_ylabel("Y (m)")
 
-    # (a) default buried
-    ax1.set_title("(a) Default Buried Site  (Left Arm Clips)", fontsize=12, fontweight="bold")
-    ax1.add_patch(Rectangle((-0.15, -0.15), 0.30, 0.30, facecolor="gray", alpha=0.3,
-                            edgecolor="black", linewidth=2))
-    ax1.add_patch(Circle((0, 0), 0.05, facecolor="red", alpha=0.8))
-    ax1.add_patch(Circle((0, -0.10), 0.12, facecolor="blue", alpha=0.45))
-    ax1.add_patch(Circle((0, 0.10), 0.12, facecolor="green", alpha=0.45))
-    ax1.add_patch(Polygon([[0, -0.04], [-0.035, -0.11], [0.035, -0.11]],
-                          facecolor="red", edgecolor="darkred", linewidth=2, alpha=0.9))
-    ax1.annotate("COLLISION", xy=(0, -0.14), ha="center", fontsize=10,
-                 bbox=dict(boxstyle="round,pad=0.3", fc="red", alpha=0.75, ec="darkred"))
-    ax1.text(0, 0.22, "Object AABB Proxy", ha="center", fontsize=11, fontweight="bold")
-    ax1.text(0, 0.0, "buried\nsite", ha="center", va="center", fontsize=7, color="white")
+    for ax in (ax1, ax2):
+        ax.add_patch(Rectangle((-0.19, -0.24), 0.38, 0.48, facecolor="#B0BEC5",
+                               alpha=0.45, edgecolor="#455A64", linewidth=2))
+        ax.add_patch(Circle((0, 0), 0.035, facecolor="#263238"))
+        ax.text(0, 0.30, "object centre", ha="center", fontsize=9, fontweight="bold")
 
-    # (b) virtual east-wall
-    ax2.set_title("(b) Virtual East-Wall Sites  (Both Arms Succeed)", fontsize=12, fontweight="bold")
-    ax2.add_patch(Rectangle((-0.15, -0.15), 0.30, 0.30, facecolor="gray", alpha=0.3,
-                            edgecolor="black", linewidth=2))
-    ax2.add_patch(Circle((0.155, -0.05), 0.045, facecolor="#00CED1", edgecolor="darkcyan", linewidth=2))
-    ax2.add_patch(Circle((0.155, 0.05), 0.045, facecolor="#00CED1", edgecolor="darkcyan", linewidth=2))
-    ax2.add_patch(Circle((0.02, -0.10), 0.12, facecolor="blue", alpha=0.45))
-    ax2.add_patch(Circle((0.02, 0.10), 0.12, facecolor="green", alpha=0.45))
-    ax2.add_artist(FancyArrowPatch((0.0, 0.0), (0.12, 0.05), arrowstyle="->",
-                                   mutation_scale=18, color="purple", lw=2, linestyle="--"))
-    ax2.text(0.06, -0.16, r"$R_z(90^\circ)$", ha="center", fontsize=11, color="purple", fontweight="bold")
-    ax2.text(0, 0.22, "Object AABB Proxy", ha="center", fontsize=11, fontweight="bold")
-    ax2.text(0.155, 0.13, "virtual\nsites", ha="center", fontsize=8, color="darkcyan", fontweight="bold")
+    # Natural frame is measured from the official model sites.
+    ax1.set_title("(a) Official-Site-Derived Natural Frame", fontsize=12, fontweight="bold")
+    for x in (-0.11, 0.11):
+        ax1.add_patch(Circle((x, -0.215), 0.045, facecolor="#42A5F5",
+                             edgecolor="#0D47A1", linewidth=1.5))
+    ax1.add_artist(FancyArrowPatch((0, 0), (0, -0.78), arrowstyle="->",
+                                   mutation_scale=18, color="#6A1B9A", lw=2.5))
+    ax1.add_patch(Circle((0, -0.941), 0.08, facecolor="#66BB6A",
+                         edgecolor="#1B5E20", linewidth=2))
+    ax1.text(0.08, -0.72, r"$u$", fontsize=12, color="#6A1B9A", fontweight="bold")
+    ax1.text(0, -0.93, "base", ha="center", va="center", fontsize=8, fontweight="bold")
+    ax1.text(0, -0.33, "official model sites", ha="center", fontsize=8, color="#0D47A1")
 
-    fig.suptitle("Grasp Site Geometry Comparison", fontsize=14, fontweight="bold")
+    # The skill rotates the measured direction and creates controller targets only.
+    ax2.set_title("(b) Runtime Rotated Open-Face Frame", fontsize=12, fontweight="bold")
+    ax2.add_artist(FancyArrowPatch((0, 0), (0.78, 0), arrowstyle="->",
+                                   mutation_scale=18, color="#6A1B9A", lw=2.5))
+    for y in (-0.11, 0.11):
+        ax2.add_patch(Circle((0.315, y), 0.045, facecolor="#26C6DA",
+                             edgecolor="#006064", linewidth=1.5))
+    ax2.add_patch(Circle((0.941, 0), 0.08, facecolor="#66BB6A",
+                         edgecolor="#1B5E20", linewidth=2))
+    ax2.text(0.52, 0.07, r"$u'=R_z(\theta)u$", fontsize=11, color="#6A1B9A", fontweight="bold")
+    ax2.text(0.941, 0, "base", ha="center", va="center", fontsize=8, fontweight="bold")
+    ax2.text(0.315, 0.23, "runtime controller targets", ha="center", fontsize=8, color="#006064")
+    ax2.text(0, -0.36, "XML sites and locked files remain unchanged", ha="center", fontsize=8)
+
+    fig.suptitle("Runtime Geometry-Derived Grasp Approach", fontsize=14, fontweight="bold")
     fig.tight_layout()
     _save(fig, "grasp_comparison.png")
 
@@ -186,7 +191,7 @@ def create_astar_inflation_ladder():
             ax.plot(px, py, "g-o", lw=2, ms=5, alpha=0.85)
         ax.set_xlim(0, n); ax.set_ylim(0, n)
 
-    fig.suptitle("Graduated A* Obstacle Inflation Ladder with Endpoint Exemption",
+    fig.suptitle("Skill-Layer A* Clearance Ladder with Endpoint Exemption",
                  fontsize=15, fontweight="bold", y=0.98)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     _save(fig, "astar_inflation.png")
@@ -200,34 +205,34 @@ def create_placement_comparison():
     R = 0.80
     colors = ["#FF6B6B", "#4ECDC4", "#FFD93D"]
 
-    for ax in (ax1, ax2):
-        ax.set_xlim(-1.2, 1.2); ax.set_ylim(-1.2, 1.2); ax.set_aspect("equal")
-        ax.grid(True, alpha=0.3)
-        ax.add_patch(Circle((0, 0), R, facecolor="none", edgecolor="orange",
-                            linewidth=3, linestyle="--", alpha=0.8))
-        ax.text(0, R + 0.05, "Scoring Radius (<0.80m)", ha="center", fontsize=9, color="darkorange")
+    # (a) real final positions from the previous 65-point package.
+    old_aux = np.array([0.144, 8.473])
+    old_output6 = np.array([10.03, -7.27])
+    old_positions = np.array([[10.374096, -7.240515], [9.988338, -6.559996], [10.199182, -7.661235]])
+    ax1.set_xlim(-1.5, 11.5); ax1.set_ylim(-8.7, 10.0); ax1.set_aspect("equal")
+    ax1.grid(True, alpha=0.3)
+    ax1.add_patch(Circle(old_aux, R, facecolor="none", edgecolor="orange", linewidth=3, linestyle="--"))
+    ax1.add_patch(Circle(old_output6, R, facecolor="none", edgecolor="#78909C", linewidth=2, linestyle=":"))
+    for i, (x, y) in enumerate(old_positions):
+        ax1.add_patch(Circle((x, y), 0.16, facecolor=colors[i], edgecolor="black", linewidth=1.2))
+    ax1.text(*old_aux, "official\naux_output_1", ha="center", va="center", fontsize=8, fontweight="bold")
+    ax1.text(*old_output6, "stale output_6", ha="center", va="center", fontsize=8)
+    ax1.set_title("(a) Previous Package: Correct Grasp, Wrong Target (15/30)", fontsize=11, fontweight="bold")
+    ax1.set_xlabel("Factory X (m)"); ax1.set_ylabel("Factory Y (m)")
 
-    # (a) simultaneous release - FAIL
-    ax1.set_title("(a) Simultaneous Release  (Chain-Push - FAIL)", fontsize=13, fontweight="bold")
-    for i, (x, y) in enumerate([(0.05, 0.02), (0.10, 0.06), (0.02, -0.03)]):
-        ax1.add_patch(Circle((x, y), 0.11, facecolor=colors[i], edgecolor="black", linewidth=1.5, alpha=0.85))
-    ax1.annotate("", xy=(0.92, 0.16), xytext=(0.08, 0.03),
-                 arrowprops=dict(arrowstyle="-|>", lw=2.5, color="red"))
-    ax1.add_patch(Circle((0.92, 0.16), 0.11, facecolor=colors[0], edgecolor="red", linewidth=2.5, alpha=0.6))
-    ax1.text(0.95, 0.30, ">0.92m", fontsize=10, color="red", fontweight="bold")
-    ax1.text(0, -1.05, "STATUS: FAILED", ha="center", fontsize=14, fontweight="bold", color="red")
+    # (b) real final L5 positions relative to aux_output_1.
+    final_relative = np.array([[0.150347, 0.110250], [0.354154, 0.043981], [-0.372031, 0.096636]])
+    ax2.set_xlim(-1.0, 1.0); ax2.set_ylim(-1.0, 1.0); ax2.set_aspect("equal")
+    ax2.grid(True, alpha=0.3)
+    ax2.add_patch(Circle((0, 0), R, facecolor="none", edgecolor="orange", linewidth=3, linestyle="--"))
+    for i, (x, y) in enumerate(final_relative):
+        ax2.add_patch(Circle((x, y), 0.11, facecolor=colors[i], edgecolor="black", linewidth=1.5))
+        ax2.text(x, y + 0.16, f"{np.hypot(x, y):.2f}m", ha="center", fontsize=8, color="blue")
+    ax2.text(0, 0, "aux_output_1", ha="center", va="center", fontsize=8, fontweight="bold")
+    ax2.set_title("(b) Final Package: Three Physical Drops (30/30)", fontsize=11, fontweight="bold")
+    ax2.set_xlabel("X relative to target (m)"); ax2.set_ylabel("Y relative to target (m)")
 
-    # (b) spread placement - PASS
-    ax2.set_title("(b) Sequential Spread ($\\pm$0.38m)  (PASS)", fontsize=13, fontweight="bold")
-    for i, (x, y) in enumerate([(0.55, 0.0), (0.50, 0.38), (0.50, -0.38)]):
-        ax2.add_patch(Circle((x, y), 0.11, facecolor=colors[i], edgecolor="black", linewidth=1.5, alpha=0.85))
-        d = np.hypot(x, y)
-        ax2.text(x, y + 0.16, f"{d:.2f}m", ha="center", fontsize=8, color="blue")
-    ax2.text(-0.95, 0.38, "+0.38m", fontsize=9, color="blue", fontweight="bold")
-    ax2.text(-0.95, -0.40, "-0.38m", fontsize=9, color="blue", fontweight="bold")
-    ax2.text(0, -1.05, "STATUS: PASSED", ha="center", fontsize=14, fontweight="bold", color="green")
-
-    fig.suptitle("Multi-Object Release Strategy Comparison", fontsize=14, fontweight="bold")
+    fig.suptitle("L5 Target Alignment from Recorded Trajectories", fontsize=14, fontweight="bold")
     fig.tight_layout(rect=[0, 0, 1, 0.95])
     _save(fig, "placement_comparison.png")
 
@@ -239,22 +244,24 @@ def create_results_performance_chart():
     fig, ax = plt.subplots(figsize=(10, 6))
     levels = ["L1", "L2", "L3", "L4", "L5"]
     max_scores = [10, 15, 20, 25, 30]
-    achieved = [10, 15, 20, 25, 30]
-    x = np.arange(len(levels)); w = 0.38
+    previous = [10, 15, 0, 25, 15]
+    final = [10, 15, 20, 25, 30]
+    x = np.arange(len(levels)); w = 0.25
 
-    ax.bar(x - w / 2, max_scores, w, label="Max Score", color="lightgray", edgecolor="black", alpha=0.6)
-    ax.bar(x + w / 2, achieved, w, label="Achieved", color="#43A047", edgecolor="darkgreen")
-    for i, (m, a) in enumerate(zip(max_scores, achieved)):
-        ax.text(i - w / 2, m + 0.4, str(m), ha="center", fontsize=10, fontweight="bold")
-        ax.text(i + w / 2, a + 0.4, str(a), ha="center", fontsize=10, fontweight="bold", color="darkgreen")
+    ax.bar(x - w, max_scores, w, label="Maximum", color="lightgray", edgecolor="black", alpha=0.65)
+    ax.bar(x, previous, w, label="Previous package (65)", color="#EF5350", edgecolor="#B71C1C")
+    ax.bar(x + w, final, w, label="Official-aligned final (100)", color="#43A047", edgecolor="darkgreen")
+    for i, values in enumerate(zip(max_scores, previous, final)):
+        for dx, value, color in ((-w, values[0], "#333333"), (0, values[1], "#B71C1C"), (w, values[2], "#1B5E20")):
+            ax.text(i + dx, value + 0.4, str(value), ha="center", fontsize=9, fontweight="bold", color=color)
 
     ax.set_ylabel("Score", fontsize=12, fontweight="bold")
-    ax.set_title("Competition Results: Perfect Scores Across All Levels (100/100)",
+    ax.set_title("Objective Rescore: Previous vs Official-Aligned Final",
                  fontsize=14, fontweight="bold", pad=14)
     ax.set_xticks(x); ax.set_xticklabels(levels, fontsize=12)
     ax.set_ylim(0, 35); ax.legend(fontsize=11, loc="upper left")
     ax.yaxis.grid(True, alpha=0.3); ax.set_axisbelow(True)
-    ax.text(2, 33, "TOTAL: 100 / 100", ha="center", fontsize=14, fontweight="bold",
+    ax.text(2, 33, "65 / 100  ->  100 / 100", ha="center", fontsize=14, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.4", fc="#FFF3CD", ec="orange"))
     fig.tight_layout()
     _save(fig, "performance_results.png")

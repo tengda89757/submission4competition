@@ -13,11 +13,8 @@ from pathlib import Path
 import numpy as np
 
 from robot_agent.core.navigation import (
-    PASSABLE,
     astar,
     grid_to_world,
-    inflate_obstacles,
-    nearest_passable_cell,
     simplify_path,
     world_to_grid,
 )
@@ -79,81 +76,11 @@ def plan_world_path(
     start_cell = world_to_grid(start_xy[0], start_xy[1], bounds, resolution)
     goal_cell = world_to_grid(goal_xy[0], goal_xy[1], bounds, resolution)
 
-    # Prefer paths that keep clearance from obstacle AABBs: the base fits
-    # through 1-cell gaps but the arms stick out ~0.4 m and clip modules
-    # (judge collision → -5).  Degrade the margin gracefully so tight
-    # approach corridors never become unreachable.
-    def _ladder(goal):
-        for margin_m in (0.45, 0.30, 0.15, 0.0):
-            margin_cells = int(round(margin_m / resolution))
-            inflated = inflate_obstacles(grid, margin_cells)
-            if margin_cells > 0:
-                # Exempt endpoints: approach points sit right next to station
-                # tables and would be swallowed by the dilation, which shifts
-                # the snapped goal and degrades placement accuracy.
-                for cell in (start_cell, goal):
-                    r0 = max(0, cell[0] - margin_cells - 2)
-                    r1 = min(grid.shape[0], cell[0] + margin_cells + 3)
-                    c0 = max(0, cell[1] - margin_cells - 2)
-                    c1 = min(grid.shape[1], cell[1] + margin_cells + 3)
-                    inflated[r0:r1, c0:c1] = grid[r0:r1, c0:c1]
-            try:
-                return astar(inflated, start_cell, goal)
-            except RuntimeError:
-                continue
-        return None
-
-    cell_path = _ladder(goal_cell)
-    if cell_path is None:
-        # Goal may sit in a sealed-off passable pocket (scene 9 output_6):
-        # re-target the nearest cell reachable from the start.
-        snapped = _snap_goal_into_start_component(grid, start_cell, goal_cell)
-        if snapped is not None:
-            cell_path = _ladder(snapped)
-            if cell_path is not None:
-                print(f"[NAV] goal cell {tuple(goal_cell)} unreachable; snapped to "
-                      f"{snapped} in start's component", flush=True)
-    if cell_path is None:
-        # Surface the original planner error for the raw grid
-        cell_path = astar(grid, start_cell, goal_cell)
+    cell_path = astar(grid, start_cell, goal_cell)
     world_path = [
         grid_to_world(row, col, bounds, resolution) for row, col in cell_path
     ]
     return simplify_path(world_path, min_spacing=min_spacing)
-
-
-def _snap_goal_into_start_component(
-    grid: np.ndarray,
-    start_cell: tuple[int, int],
-    goal_cell: tuple[int, int],
-):
-    """Nearest cell to *goal_cell* reachable from *start_cell*, or None.
-
-    Some generated maps contain passable pockets sealed off by obstacle rings
-    (scene 9: output_6's approach point sits in a 39-cell island), so A* snaps
-    the goal INTO the pocket and then fails. Planning to the closest cell of
-    the start's connected component gets the base as near the station as the
-    map allows — the transport attachment holds the object 0.94 m ahead, which
-    still lands it within the 0.80 m scoring radius.
-    """
-    try:
-        from scipy import ndimage
-    except ImportError:
-        return None
-    try:
-        start = nearest_passable_cell(grid, start_cell)
-    except RuntimeError:
-        return None
-    passable = np.isin(grid, list(PASSABLE))
-    labels, _ = ndimage.label(passable, structure=np.ones((3, 3), dtype=bool))
-    comp = labels[start[0], start[1]]
-    if comp == 0:
-        return None
-    rows, cols = np.nonzero(labels == comp)
-    d2 = (rows - goal_cell[0]) ** 2 + (cols - goal_cell[1]) ** 2
-    i = int(np.argmin(d2))
-    snapped = (int(rows[i]), int(cols[i]))
-    return None if snapped == tuple(goal_cell) else snapped
 
 
 # ── station summary (for LLM) ───────────────────────────────

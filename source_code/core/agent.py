@@ -245,7 +245,6 @@ class RobotAgent:
         skill_name: str = step.get("skill_name", "")
         description: str = step.get("description") or step.get("task") or ""
         raw_inputs = step.get("inputs") or {}
-        print(f"[AGENT STEP {step_index}] {skill_name}: inputs={dict(raw_inputs)}", flush=True)
         inputs: dict = dict(raw_inputs) if isinstance(raw_inputs, dict) else {}
         inputs = self._inputs_with_scene_object(inputs)
         inputs = self._inputs_with_previous_move_pose(inputs, skill_name, previous_steps)
@@ -337,13 +336,12 @@ class RobotAgent:
                         attempts=attempt + 1,
                     )
                 last_result = result
-            except Exception as exc:
-                import traceback
-                logger.exception("Step %d (%s): exception on attempt %d: %s", step_index, skill.name, attempt + 1, str(exc))
-                print(f"[AGENT] {step_index}({skill.name}): {type(exc).__name__}: {exc}", flush=True)
             except TimeoutError:
                 last_result = SkillResult(skill_name=skill.name, success=False, message=f"Timed out after {timeout:.0f}s")
                 logger.warning("Step %d (%s): timeout (attempt %d/%d)", step_index, skill.name, attempt + 1, effective_max_retries + 1)
+            except Exception:
+                logger.exception("Step %d (%s): error on attempt %d", step_index, skill.name, attempt + 1)
+                last_result = SkillResult(skill_name=skill.name, success=False, message=f"Error on attempt {attempt + 1}")
 
         logger.error("Step %d (%s): all %d attempts failed", step_index, skill.name, effective_max_retries + 1)
         return StepOutput(

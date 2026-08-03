@@ -97,32 +97,6 @@ def nearest_passable_cell(
 
 # ── A* planner ──────────────────────────────────────────────
 
-def inflate_obstacles(grid: np.ndarray, margin_cells: int) -> np.ndarray:
-    """Return a copy of *grid* with impassable cells dilated by *margin_cells*.
-
-    The raw occupancy grid only marks obstacle footprints, so A* paths may
-    hug modules within one cell (5 cm) — close enough for an outstretched
-    arm to clip them.  Cells swallowed by the dilation are marked OBSTACLE;
-    passable values elsewhere are preserved.
-    """
-    if margin_cells <= 0:
-        return grid
-    impassable = ~np.isin(grid, list(PASSABLE))
-    dilated = impassable.copy()
-    for dr in range(-margin_cells, margin_cells + 1):
-        for dc in range(-margin_cells, margin_cells + 1):
-            if (dr == 0 and dc == 0) or dr * dr + dc * dc > margin_cells * margin_cells:
-                continue
-            src_r = slice(max(0, -dr), impassable.shape[0] - max(0, dr))
-            dst_r = slice(max(0, dr), impassable.shape[0] - max(0, -dr))
-            src_c = slice(max(0, -dc), impassable.shape[1] - max(0, dc))
-            dst_c = slice(max(0, dc), impassable.shape[1] - max(0, -dc))
-            dilated[dst_r, dst_c] |= impassable[src_r, src_c]
-    inflated = grid.copy()
-    inflated[dilated & ~impassable] = OBSTACLE
-    return inflated
-
-
 def astar(
     grid: np.ndarray,
     start_cell: tuple[int, int],

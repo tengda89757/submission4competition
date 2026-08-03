@@ -11,8 +11,8 @@
   (task_config.json's "orange" is baseline-only and NOT the graded target).
 
   Usage:
-    powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Score
-    powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Backend ollama -OllamaModel qwen2.5:7b
+    powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Canonical -Score
+    powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Canonical -Backend ollama -OllamaModel qwen2.5:7b
 #>
 param(
     [ValidateSet("L1","L2","L3","L4","L5")][string]$Level = "L1",

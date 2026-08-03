@@ -362,9 +362,9 @@ class PickUpSkill(BaseSkill):
                 if self._grid is None or self._scene is None:
                     logger.warning("pick_up: no grid for safe staging motion")
                     return
-                from robot_agent.core.map_loader import plan_world_path
+                from robot_agent.skills.move import plan_clearance_world_path
                 scene_dict = {"bounds": self._scene.bounds, "resolution": self._scene.resolution}
-                path = plan_world_path(
+                path = plan_clearance_world_path(
                     scene_dict, self._grid, cur_xy, staging,
                     min_spacing=self._path_spacing,
                 )

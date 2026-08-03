@@ -20,7 +20,7 @@ powershell -ExecutionPolicy Bypass -File pipeline\setup_env.ps1           # uv v
 ollama pull qwen2.5:7b                                                     # local LLM planner (already wired in robot_params.json)
 
 # run a level end-to-end and score it (headless CLI equivalent of the dashboard "Execute"):
-powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Score
+powershell -ExecutionPolicy Bypass -File pipeline\run_level.ps1 -Level L1 -Canonical -Score
 
 # package the trajectory for submission:
 powershell -ExecutionPolicy Bypass -File pipeline\package_submission.ps1 -Level L1

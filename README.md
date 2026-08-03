@@ -60,27 +60,29 @@ pipeline documentation (root-cause diagnoses, retraining, erratum sync).
 
 Unified RobotAgent (LLM plan → navigate → grasp → place) over the official
 robosuite/MuJoCo baseline. Runtime adaptations are confined to the skill and
-pipeline layers; locked core/config/map files are byte-identical to the pinned
-official commit:
+pipeline layers; locked core/config/map paths have no Git content diff from the
+pinned official commit (ignoring checkout-only LF/CRLF conversion):
 
 - **Scripted-expert grasp fallback** (`source_code/skills/scripted_grasp.py`) —
   BC policy first, deterministic collector-primitive fallback on failure.
 - **Live geometry-derived approach poses** (`source_code/skills/scripted_grasp.py`)
   — computes reachable base poses from the current object and grasp-site geometry,
-  including the rotated L3/L5 approaches.
+  including the selected rotated L2/L3/L5 approaches.
 - **Physical staging and station disambiguation** (`source_code/skills/move.py`,
   `source_code/skills/pick_up.py`) — resolves `aux_*` names exactly, then uses A*,
   turning, and straight approach motions without mutating attachment state.
-- **Distinct L5 release slots** (`source_code/skills/place_down.py`) — places the
-  three white totes at separate valid points on `aux_output_1`.
+- **L5 state continuity and distinct release slots**
+  (`source_code/skills/pick_up.py`, `source_code/skills/place_down.py`) — preserves
+  non-target state around the official wrapped grasp call and places the three
+  white totes at separate valid points on `aux_output_1`.
 - **Graduated A\* obstacle inflation with endpoint exemption**
-  (`source_code/core/navigation.py`) — 0.45→0 m margin ladder; zero collision
+  (`source_code/skills/move.py`) — 0.45→0 m margin ladder; zero collision
   frames across all five submitted trajectories.
 - **Official-current task routing** — L3 uses `aux_input_1 → output_5` and the
   right-side blue totes; L5 uses `input_1 → aux_output_1`, matching commit
   `129e94a9` and the published erratum.
 
-Details, ablations, prior-work comparison: see the **Novelty Statement** section
+Details, evidence boundaries, and limitations: see the **Novelty Statement** section
 of [`paper.pdf`](paper.pdf).
 
 ## 5. Repository Layout (deliverables at depth ≤ 2)
@@ -94,7 +96,7 @@ of [`paper.pdf`](paper.pdf).
 ├── verify_submission.py     ← one command re-scores all five ZIPs
 ├── submission_100_final_129e94a9/ ← ★ canonical final ZIPs + verification report
 ├── submissions/             ← final ZIPs mirrored here for default verification
-├── videos/                  ← L1–L5 demos (follow + birdview MP4)
+├── videos/                  ← legacy qualitative replays; not final L3/L5 evidence
 ├── paper/                   ← LaTeX sources + figures for paper.pdf
 ├── defense/                 ← defense slides + expert Q&A
 ├── source_code/             ← curated participant-modified layers only
