@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build figures and the typeset JCIIOT technical report from final evidence."""
+"""Build figures and the typeset JCIIOT technical report from submitted evidence."""
 
 from __future__ import annotations
 
@@ -148,7 +148,7 @@ def _save_architecture() -> None:
 def _save_l5_placement(results: dict) -> None:
     l5 = next(row for row in results["levels"] if row["level"] == "L5")
     distances = l5["final_target_distances_m"]
-    # Target-relative final XY values from the same frozen trajectory.
+    # Target-relative terminal XY values from the submitted trajectory.
     points = {
         "front": (0.1535 - 0.144, 8.538156 - 8.473),
         "center": (0.809918 - 0.144, 8.520620 - 8.473),
@@ -185,7 +185,7 @@ def _save_l5_placement(results: dict) -> None:
     ax.set_ylim(-0.9, 0.9)
     ax.set_xlabel("X offset from official target center (m)")
     ax.set_ylabel("Y offset from official target center (m)")
-    ax.set_title("L5 final placement from the frozen trajectory", fontweight="bold")
+    ax.set_title("L5 terminal placement from the submitted trajectory", fontweight="bold")
     ax.grid(alpha=0.22)
     ax.text(-0.86, -0.85, "dashed circle = 0.80 m score radius", fontsize=8.5, color="#667680")
     fig.savefig(ASSETS / "l5_final_placement.png", dpi=190, facecolor="white")
@@ -676,7 +676,7 @@ def build_pdf() -> Path:
     story.append(Spacer(1, 13 * mm))
     story.append(
         Paragraph(
-            "Evidence note: every accepted level reaches its maximum objective score, passes the independent "
+            "Evidence note: every evaluated level reaches its maximum objective score, passes the independent "
             "realism audit, and has a one-to-one trajectory/video frame mapping. Novelty claims are limited "
             "to this fixed competition setting.",
             ParagraphStyle(

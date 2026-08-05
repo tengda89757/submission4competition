@@ -198,13 +198,13 @@
     },
     {
       "path": "output/pdf/TECHNICAL_REPORT.pdf",
-      "bytes": 1811842,
-      "sha256": "f6e92189fa1a433480c0e24939eaf7204c8dd7e623844ad9540532ac4b7258e7"
+      "bytes": 1812832,
+      "sha256": "d444ac54c773f20eb03bbee7386ce901b357dcd15c6b0018e2611989cab9855d"
     },
     {
       "path": "README.md",
-      "bytes": 2168,
-      "sha256": "9d80a3ef37703e0aa3f1619bd1be21c6db420861c7dbf3299a2506276e956d92"
+      "bytes": 2109,
+      "sha256": "5006409a1a7da73ea404041af6cc59b283acabc39fd72e329d5abd183e3bfc57"
     },
     {
       "path": "report/assets/continuity_margins.png",
@@ -213,8 +213,8 @@
     },
     {
       "path": "report/assets/l5_final_placement.png",
-      "bytes": 106901,
-      "sha256": "59b0992096606ca2e5f2f70c00ee59451e8cf8bf0f92cbaa90d0e3ab964ff47b"
+      "bytes": 107672,
+      "sha256": "867bf2562858504bf6dc823671925e354cad72c7c453b0fc5e462f600cb2af6c"
     },
     {
       "path": "report/assets/system_architecture.png",
@@ -228,8 +228,8 @@
     },
     {
       "path": "report/build_technical_report.py",
-      "bytes": 25591,
-      "sha256": "a2ccbd9d7e9d3b94455bf084c1eedcd8e0a20b2f1da9c43c612be139b9e93826"
+      "bytes": 25603,
+      "sha256": "58ffb1e20ca4273a542e4d84281c309c320eb9c2a38eec22b2312b15d8af03df"
     },
     {
       "path": "results/final_run_summary.json",
@@ -328,8 +328,8 @@
     },
     {
       "path": "source_code/README.md",
-      "bytes": 705,
-      "sha256": "b81cb06ee965892a21500d520cb7684259d9a41b679ceeff9899331d8aa6a2d1"
+      "bytes": 721,
+      "sha256": "f7131d3351d2720a938adbddae97988656a35d1a5ba9727356f98688818a8263"
     },
     {
       "path": "source_code/requirements.txt",
@@ -588,8 +588,8 @@
     },
     {
       "path": "TECHNICAL_REPORT.md",
-      "bytes": 32433,
-      "sha256": "d74df7f33196c71013a4fb8197be167e0f0291dd20fd4399a703f35a4faeb37d"
+      "bytes": 32290,
+      "sha256": "096f16a59dba2e4680d79daca0cf7fe6c24079a36736862de0033c46595fd230"
     },
     {
       "path": "third_party_licenses/robomimic_LICENSE.txt",
