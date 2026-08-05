@@ -1,0 +1,36 @@
+{
+  "level": "L3",
+  "status": "PASS",
+  "files": [
+    {
+      "file": "realism_audit.json",
+      "bytes": 3023,
+      "sha256": "a3a3fd1a5f0abaac3377db6cf55d59fd872d424bf19ef4325ce0c1f579376c20"
+    },
+    {
+      "file": "run_result.json",
+      "bytes": 9467,
+      "sha256": "a20b156c88426193288f06fd64b18babddc77076bae2404776f503a8831fd693"
+    },
+    {
+      "file": "score.json",
+      "bytes": 720,
+      "sha256": "a64345e15efa33a25cfc08f41ba087d0ec1dba5c6041b6ba4475a523a7851f5e"
+    },
+    {
+      "file": "submission_manifest.json",
+      "bytes": 936,
+      "sha256": "3a1a02434546ceccc4ad710f25a6ab53a61709f4d91b14d8a37c4fc68a0a247c"
+    },
+    {
+      "file": "trajectory.json",
+      "bytes": 7314819,
+      "sha256": "1c86f85abcd3abdd833fe66531ca39847548f9d66b63186286b27f766baa9955"
+    },
+    {
+      "file": "video_metadata.json",
+      "bytes": 663,
+      "sha256": "211d4645b9fc323d3a703fa9e4babc5a0aad8f1656d41d346c56dab93a9b9880"
+    }
+  ]
+}

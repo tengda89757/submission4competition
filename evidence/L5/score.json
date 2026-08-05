@@ -1,0 +1,43 @@
+{
+  "task_index": 4,
+  "trajectory": "D:\\2026\\JCOII-2026\\JCIIOT2026-master\\JCIIOT\\recordings\\FactorySorting9_3FO3ERT2C5FP\\trajectory_20260805_080916_OK.json",
+  "score": 30,
+  "score_rule_version": "grasp_success_gate_l5_multi_v2",
+  "official_reference_commit": "129e94a9cff787031472045e19c24a4baeaefc48",
+  "details": {
+    "total": 30,
+    "items": [
+      {
+        "label": "L5 white_tote_b01_left_center: grasped & left source (grasp=yes)",
+        "score": 5,
+        "ok": true
+      },
+      {
+        "label": "L5 white_tote_b01_left_center: placed at target (grasp=yes)",
+        "score": 5,
+        "ok": true
+      },
+      {
+        "label": "L5 white_tote_b01_left_front: grasped & left source (grasp=yes)",
+        "score": 5,
+        "ok": true
+      },
+      {
+        "label": "L5 white_tote_b01_left_front: placed at target (grasp=yes)",
+        "score": 5,
+        "ok": true
+      },
+      {
+        "label": "L5 white_tote_b01_left_back: grasped & left source (grasp=yes)",
+        "score": 5,
+        "ok": true
+      },
+      {
+        "label": "L5 white_tote_b01_left_back: placed at target (grasp=yes)",
+        "score": 5,
+        "ok": true
+      }
+    ],
+    "max": 30
+  }
+}

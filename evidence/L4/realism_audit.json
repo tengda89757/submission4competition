@@ -1,0 +1,107 @@
+{
+  "trajectory": "D:\\2026\\JCOII-2026\\JCIIOT2026-master\\JCIIOT\\recordings\\FactorySorting7_3FO3ERFKY9RN\\trajectory_20260805_082430_OK.json",
+  "frames": 2324,
+  "limits": {
+    "max_base_step_m": 0.06,
+    "max_base_turn_rad": 0.08,
+    "max_joint_step": 0.35,
+    "max_object_step_m": 0.1,
+    "max_object_turn_rad": 0.25,
+    "min_held_contact_fraction": 0.99
+  },
+  "transition": {
+    "max_base_step_m": 0.03510014244985419,
+    "max_base_step_frame": 1433,
+    "max_base_turn_rad": 0.052433872103199955,
+    "max_base_turn_frame": 2153,
+    "max_joint_step": 0.299188,
+    "max_joint_step_frame": 2263,
+    "max_joint_step_name": "gripper0_right_right_inner_finger_joint",
+    "max_object_step_m": 0.052563887223072994,
+    "max_object_step_frame": 2219,
+    "max_object_step_name": "blue_container_h01_back_upper",
+    "max_object_turn_rad": 0.11081605065541619,
+    "max_object_turn_frame": 2265,
+    "max_object_turn_name": "blue_container_h01_back_upper",
+    "largest_object_steps": [
+      {
+        "step_m": 0.052564,
+        "frame": 2219,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052563,
+        "frame": 2209,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052556,
+        "frame": 2205,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052556,
+        "frame": 2163,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2135,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2125,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2141,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2111,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2131,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.052548,
+        "frame": 2213,
+        "object": "blue_container_h01_back_upper",
+        "held_transition": true
+      }
+    ]
+  },
+  "recorded_collision_frames": [],
+  "contact": {
+    "held_frames": 997,
+    "contact_frames": 997,
+    "contact_fraction": 1.0,
+    "missing_contact_frames": [],
+    "unintended_contact_frames": [],
+    "unintended_contact_pairs": [],
+    "per_object": {
+      "blue_container_h01_back_upper": {
+        "held_frames": 997,
+        "contact_frames": 997,
+        "contact_fraction": 1.0
+      }
+    }
+  },
+  "pass": true,
+  "failures": []
+}

@@ -1,0 +1,110 @@
+{
+  "trajectory": "D:\\2026\\JCOII-2026\\JCIIOT2026-master\\JCIIOT\\recordings\\FactorySorting5_3FO3ERTPXEUT\\trajectory_20260805_082229_OK.json",
+  "frames": 2402,
+  "limits": {
+    "max_base_step_m": 0.06,
+    "max_base_turn_rad": 0.08,
+    "max_joint_step": 0.35,
+    "max_object_step_m": 0.1,
+    "max_object_turn_rad": 0.25,
+    "min_held_contact_fraction": 0.99
+  },
+  "transition": {
+    "max_base_step_m": 0.03511253337485083,
+    "max_base_step_frame": 1369,
+    "max_base_turn_rad": 0.026600184935848568,
+    "max_base_turn_frame": 2277,
+    "max_joint_step": 0.225186,
+    "max_joint_step_frame": 764,
+    "max_joint_step_name": "gripper0_left_finger_joint",
+    "max_object_step_m": 0.03500644747757199,
+    "max_object_step_frame": 1178,
+    "max_object_step_name": "blue_tote_b01_far_right",
+    "max_object_turn_rad": 0.04134867448085751,
+    "max_object_turn_frame": 2342,
+    "max_object_turn_name": "blue_tote_b01_far_right",
+    "largest_object_steps": [
+      {
+        "step_m": 0.035006,
+        "frame": 1178,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1746,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1713,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1691,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1688,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1664,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1591,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1569,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1558,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.035006,
+        "frame": 1556,
+        "object": "blue_tote_b01_far_right",
+        "held_transition": true
+      }
+    ]
+  },
+  "recorded_collision_frames": [],
+  "contact": {
+    "held_frames": 1180,
+    "contact_frames": 1178,
+    "contact_fraction": 0.998305,
+    "missing_contact_frames": [
+      2339,
+      2340
+    ],
+    "unintended_contact_frames": [],
+    "unintended_contact_pairs": [],
+    "per_object": {
+      "blue_tote_b01_far_right": {
+        "held_frames": 1180,
+        "contact_frames": 1178,
+        "contact_fraction": 0.998305
+      }
+    }
+  },
+  "pass": true,
+  "failures": []
+}

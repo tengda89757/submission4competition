@@ -1,0 +1,107 @@
+{
+  "trajectory": "D:\\2026\\JCOII-2026\\JCIIOT2026-master\\JCIIOT\\recordings\\FactorySorting3_3FO3ERRPH7X9\\trajectory_20260805_082054_OK.json",
+  "frames": 1674,
+  "limits": {
+    "max_base_step_m": 0.06,
+    "max_base_turn_rad": 0.08,
+    "max_joint_step": 0.35,
+    "max_object_step_m": 0.1,
+    "max_object_turn_rad": 0.25,
+    "min_held_contact_fraction": 0.99
+  },
+  "transition": {
+    "max_base_step_m": 0.03510128202786892,
+    "max_base_step_frame": 577,
+    "max_base_turn_rad": 0.0522714953252302,
+    "max_base_turn_frame": 1483,
+    "max_joint_step": 0.225462,
+    "max_joint_step_frame": 187,
+    "max_joint_step_name": "gripper0_right_finger_joint",
+    "max_object_step_m": 0.04796942731573871,
+    "max_object_step_frame": 1563,
+    "max_object_step_name": "green_tote_b01_upper",
+    "max_object_turn_rad": 0.06496071862042799,
+    "max_object_turn_frame": 1613,
+    "max_object_turn_name": "green_tote_b01_upper",
+    "largest_object_steps": [
+      {
+        "step_m": 0.047969,
+        "frame": 1563,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047969,
+        "frame": 1569,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047963,
+        "frame": 1549,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047963,
+        "frame": 1509,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047963,
+        "frame": 1537,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047963,
+        "frame": 1531,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047962,
+        "frame": 1541,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047959,
+        "frame": 1575,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047956,
+        "frame": 1525,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      },
+      {
+        "step_m": 0.047956,
+        "frame": 1471,
+        "object": "green_tote_b01_upper",
+        "held_transition": true
+      }
+    ]
+  },
+  "recorded_collision_frames": [],
+  "contact": {
+    "held_frames": 1050,
+    "contact_frames": 1050,
+    "contact_fraction": 1.0,
+    "missing_contact_frames": [],
+    "unintended_contact_frames": [],
+    "unintended_contact_pairs": [],
+    "per_object": {
+      "green_tote_b01_upper": {
+        "held_frames": 1050,
+        "contact_frames": 1050,
+        "contact_fraction": 1.0
+      }
+    }
+  },
+  "pass": true,
+  "failures": []
+}

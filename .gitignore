@@ -1,0 +1,23 @@
+# Python and environments
+__pycache__/
+*.py[cod]
+.venv/
+
+# Paper and local QA build products
+paper/
+*.aux
+*.log
+*.out
+*.toc
+tmp/
+
+# Superseded local submission builds and extracted working directories
+submission.txt
+submission.zip
+submission_100_*/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

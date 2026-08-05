@@ -1,0 +1,127 @@
+{
+  "format_version": 1,
+  "verification_scope": "full decode of every encoded frame",
+  "result": "PASS",
+  "videos": [
+    {
+      "level": "L1",
+      "file": "L1_dualview_full.mp4",
+      "sha256": "0709a4312196be610bba7ab3c8c6f3f9743b23c0129ae0de2f61d94b8eabfced",
+      "bytes": 6030926,
+      "source_frames": 1793,
+      "camera_views": [
+        "frontview",
+        "robot0_robotview"
+      ],
+      "duration_seconds": 89.65,
+      "declared_frames": 1793,
+      "decoded_frames": 1793,
+      "fps": 20.0,
+      "resolution": [
+        768,
+        288
+      ],
+      "black_composite_frames": [],
+      "black_left_view_frames": [],
+      "black_right_view_frames": [],
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L2",
+      "file": "L2_dualview_full.mp4",
+      "sha256": "715440123af89a0533f857f50ff4a1a8a26940891d7a52a60f2a2ef2aad32540",
+      "bytes": 3494089,
+      "source_frames": 1674,
+      "camera_views": [
+        "frontview",
+        "robot0_robotview"
+      ],
+      "duration_seconds": 83.7,
+      "declared_frames": 1674,
+      "decoded_frames": 1674,
+      "fps": 20.0,
+      "resolution": [
+        768,
+        288
+      ],
+      "black_composite_frames": [],
+      "black_left_view_frames": [],
+      "black_right_view_frames": [],
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L3",
+      "file": "L3_dualview_full.mp4",
+      "sha256": "8f34efd5788469f8f42d2afb593cff8733030b584db857a046c844a5294cbf0c",
+      "bytes": 3558516,
+      "source_frames": 2402,
+      "camera_views": [
+        "frontview",
+        "robot0_robotview"
+      ],
+      "duration_seconds": 120.1,
+      "declared_frames": 2402,
+      "decoded_frames": 2402,
+      "fps": 20.0,
+      "resolution": [
+        768,
+        288
+      ],
+      "black_composite_frames": [],
+      "black_left_view_frames": [],
+      "black_right_view_frames": [],
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L4",
+      "file": "L4_dualview_full.mp4",
+      "sha256": "049dee3d205214d768bb2284539ccaa1b660531279d7a6c86e3247cd2456d7f7",
+      "bytes": 3245691,
+      "source_frames": 2324,
+      "camera_views": [
+        "agentview",
+        "robot0_robotview"
+      ],
+      "duration_seconds": 116.2,
+      "declared_frames": 2324,
+      "decoded_frames": 2324,
+      "fps": 20.0,
+      "resolution": [
+        768,
+        288
+      ],
+      "black_composite_frames": [],
+      "black_left_view_frames": [],
+      "black_right_view_frames": [],
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L5",
+      "file": "L5_dualview_full.mp4",
+      "sha256": "cfc8bcf451ace45a1444a733349571b496dac4dbe629d46956c868f50ee616fb",
+      "bytes": 15691477,
+      "source_frames": 10139,
+      "camera_views": [
+        "frontview",
+        "robot0_robotview"
+      ],
+      "duration_seconds": 506.95,
+      "declared_frames": 10139,
+      "decoded_frames": 10139,
+      "fps": 20.0,
+      "resolution": [
+        768,
+        288
+      ],
+      "black_composite_frames": [],
+      "black_left_view_frames": [],
+      "black_right_view_frames": [],
+      "status": "PASS",
+      "failed_checks": []
+    }
+  ]
+}

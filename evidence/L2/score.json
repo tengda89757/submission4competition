@@ -1,0 +1,23 @@
+{
+  "task_index": 1,
+  "trajectory": "D:\\2026\\JCOII-2026\\JCIIOT2026-master\\JCIIOT\\recordings\\FactorySorting3_3FO3ERRPH7X9\\trajectory_20260805_082054_OK.json",
+  "score": 15,
+  "score_rule_version": "grasp_success_gate_l5_multi_v2",
+  "official_reference_commit": "129e94a9cff787031472045e19c24a4baeaefc48",
+  "details": {
+    "total": 15,
+    "items": [
+      {
+        "label": "Grasp success & left source (grasp=yes, dx_src=11.98m, dy_src=11.23m)",
+        "score": 7,
+        "ok": true
+      },
+      {
+        "label": "Object reached target table after grasp (grasp=yes, dist=0.12m, x=-0.04, y=-7.30, z=1.29)",
+        "score": 8,
+        "ok": true
+      }
+    ],
+    "max": 15
+  }
+}

@@ -1,0 +1,309 @@
+{
+  "files": [
+    {
+      "path": "knowledge/constraints.md",
+      "bytes": 1036,
+      "sha256": "1b7eb947fb6225f25a1e5bae4565e5890ed754b1ca45de95af88d69d4ead16d7"
+    },
+    {
+      "path": "knowledge/robot_params.json",
+      "bytes": 2117,
+      "sha256": "5bfda3b258c6c84ea47a8b2055f27f75d8f6906158be5105ed4e2f7fcb9e5c86"
+    },
+    {
+      "path": "knowledge/sop_main.md",
+      "bytes": 2501,
+      "sha256": "7654d9f798a3af3cc03116fbaf38ad005858830bde81208159b8baff44b43e87"
+    },
+    {
+      "path": "knowledge/task_config.json",
+      "bytes": 2952,
+      "sha256": "bf8b8d9acec273a4e877917b226f18c43356da39c29e3caf485e2b80048aec26"
+    },
+    {
+      "path": "pipeline/assets_manifest.json",
+      "bytes": 7234,
+      "sha256": "67f98edf5340e50a39a7ae8b994b0a7c352f8376f35268d3060cc582d6a5a35a"
+    },
+    {
+      "path": "pipeline/audit_trajectory_realism.py",
+      "bytes": 13543,
+      "sha256": "8d964409ad7b301e58ff64c18eaf585ad00fab3e79d0e6564492b18b9fd67365"
+    },
+    {
+      "path": "pipeline/fetch_assets.ps1",
+      "bytes": 4557,
+      "sha256": "f886713e5b2553b3140acd0435d3be69c47234e56de0856a2373863801a1d508"
+    },
+    {
+      "path": "pipeline/finalize_all.ps1",
+      "bytes": 4870,
+      "sha256": "ece064a7e1ae6586f9bae9e62440e9c41511a9e4db4b55ceda6906f5af94ce65"
+    },
+    {
+      "path": "pipeline/package_submission.ps1",
+      "bytes": 3838,
+      "sha256": "01391d8f963d1d30700c2447675fc47f5d24190679621909a81a0be2e4bf467d"
+    },
+    {
+      "path": "pipeline/render_trajectory_video.py",
+      "bytes": 10031,
+      "sha256": "4a76e8f7a2aad0bdbe6f64d8855c27b1ab5936d0f7d60858cf370443c7560cbd"
+    },
+    {
+      "path": "pipeline/requirements.resolved.txt",
+      "bytes": 2337,
+      "sha256": "46588f4796d6034a8bc2098240e9b23f971978871ac2fac4f2c8511cdcb0b5bd"
+    },
+    {
+      "path": "pipeline/run_level.ps1",
+      "bytes": 7773,
+      "sha256": "eb94092c9877dd32ad8fae7af19f87dd6961f2ef76fa3857ee683f9f179c9f96"
+    },
+    {
+      "path": "pipeline/score_trajectory.py",
+      "bytes": 12722,
+      "sha256": "14b8496cacf2c11b38fceb9b7353648229da6b5287cf1904698f04c980ba16e8"
+    },
+    {
+      "path": "pipeline/setup_env.ps1",
+      "bytes": 3861,
+      "sha256": "006a3dbe21820235089c2a3d6d6c751896c737be8fa4af10365054576c0499bf"
+    },
+    {
+      "path": "pipeline/verify_final_artifacts.py",
+      "bytes": 10718,
+      "sha256": "f136e2fcf556a84b1c6855074d76f07a083db6e2462fbc78754eebe3392eeec3"
+    },
+    {
+      "path": "pyproject.toml",
+      "bytes": 490,
+      "sha256": "0db84212613d688ef11c68f5fea59c2e9654fcd2315d3e395dfa4b90c9f56fde"
+    },
+    {
+      "path": "README.md",
+      "bytes": 705,
+      "sha256": "b81cb06ee965892a21500d520cb7684259d9a41b679ceeff9899331d8aa6a2d1"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 2108,
+      "sha256": "2023046b67658fcbdf5a045a26993f6c5a728ef30df59bdbceae9698ca174921"
+    },
+    {
+      "path": "robosuite_overrides/factory_sorting/transport_attachment.py",
+      "bytes": 6310,
+      "sha256": "e21806a2b80484c375bfb72ac0b5e54db950405c2e0778ee7a8616634830e780"
+    },
+    {
+      "path": "robosuite_overrides/factory_sorting/turn_to_station.py",
+      "bytes": 9721,
+      "sha256": "557a34c168ca0be1970d77bd844257787b97b6d62dd547b798fece1573246bff"
+    },
+    {
+      "path": "robot_agent/__init__.py",
+      "bytes": 56,
+      "sha256": "037a8aa8faf728eac28adb8d3f9f71fbbce7a921e7744fe33986949e93eb2df9"
+    },
+    {
+      "path": "robot_agent/__main__.py",
+      "bytes": 115,
+      "sha256": "6a6c51be5094f7a9f5b22e7ed1ceec88fcc863137817054d2b1e9a4b517ef41c"
+    },
+    {
+      "path": "robot_agent/config.py",
+      "bytes": 4146,
+      "sha256": "855b552834be27bf83c26c4155ec67bc4fe98472fb51bf223c08e7e41716cdda"
+    },
+    {
+      "path": "robot_agent/core/__init__.py",
+      "bytes": 31,
+      "sha256": "b08492baf4d231ecf34409022ed4e95b804f712bea838019a6c6ee00a8067abf"
+    },
+    {
+      "path": "robot_agent/core/agent.py",
+      "bytes": 21690,
+      "sha256": "e59dab3a9e3f71564278ebd05e0589c418841980458a2e56861438893452ba1d"
+    },
+    {
+      "path": "robot_agent/core/feature_gates.py",
+      "bytes": 2996,
+      "sha256": "591d71e4fef76d7105d058cb8b47931ea4575bba4f2aae96388b1bd437761153"
+    },
+    {
+      "path": "robot_agent/core/glm_client.py",
+      "bytes": 6264,
+      "sha256": "909cbee12e4f4f4d7b39adb4d352ae54f17d27dd08d43c98148c5228e612ac2f"
+    },
+    {
+      "path": "robot_agent/core/knowledge_base.py",
+      "bytes": 424,
+      "sha256": "0c388c5313662a58dd45fda957be9c2cdf85eafb655b56d959d9c0c095a06857"
+    },
+    {
+      "path": "robot_agent/core/knowledge_manager.py",
+      "bytes": 17981,
+      "sha256": "6aff7fe9294c7307689f3534ca3afef5f0a918bdb3c3023bf1fccd2352c52289"
+    },
+    {
+      "path": "robot_agent/core/local_llm.py",
+      "bytes": 2461,
+      "sha256": "3e3324579d9a86924a3b8e235312e233054f5c06e1c9e7afa0ad2ec80c69d8a3"
+    },
+    {
+      "path": "robot_agent/core/map_loader.py",
+      "bytes": 6566,
+      "sha256": "c5187ece86acc9b89ca387b3eb104abe296723483a744aad9b8e2635c4887cd9"
+    },
+    {
+      "path": "robot_agent/core/memory.py",
+      "bytes": 9622,
+      "sha256": "c9b6044743982094068cd78a440bbc1e92273cf7d77490170b9b28d231811e98"
+    },
+    {
+      "path": "robot_agent/core/navigation.py",
+      "bytes": 7805,
+      "sha256": "a2c089cb18ce0fd5babfc435743918d919892dfa7371c53b4d127dc27db6d738"
+    },
+    {
+      "path": "robot_agent/core/ollama_client.py",
+      "bytes": 6306,
+      "sha256": "57a480802fcf23e7bfeb1650a8517438bb3cdca104a83d93b604e35db2358bc8"
+    },
+    {
+      "path": "robot_agent/core/openai_client.py",
+      "bytes": 9676,
+      "sha256": "8d78837363d6cb4242190d7dea6b823be6c006214a901cb554044699a1af172c"
+    },
+    {
+      "path": "robot_agent/core/output.py",
+      "bytes": 4531,
+      "sha256": "b59236dc71edf46f2ab23343cf237f052d0bf8e68d16e2d08f71b57cbd386138"
+    },
+    {
+      "path": "robot_agent/core/planner.py",
+      "bytes": 13638,
+      "sha256": "abad414999fe28bdd56210ddfc446be8b32a76d8db8240d8a1d426ff491455de"
+    },
+    {
+      "path": "robot_agent/core/registry.py",
+      "bytes": 934,
+      "sha256": "1cac3a506f70afacc314ded397f283e67e4b65ef66db53f901a642a17a83a483"
+    },
+    {
+      "path": "robot_agent/core/scene_context.py",
+      "bytes": 8461,
+      "sha256": "16913cfe1afb714fef57e88669219466d705051b3b032bc75f1fdf614d86de8e"
+    },
+    {
+      "path": "robot_agent/core/schema.py",
+      "bytes": 10540,
+      "sha256": "e36f9211bfb092babdccc91e18d9c75d2661b2fb03bb649c9b2904246a3c9317"
+    },
+    {
+      "path": "robot_agent/core/types.py",
+      "bytes": 555,
+      "sha256": "021bc784878a3283dbd02ab47e61218aef619b3b2c4220e7ca697a0e62cfd409"
+    },
+    {
+      "path": "robot_agent/core/vision_client.py",
+      "bytes": 6366,
+      "sha256": "c7d5eb124cf8433b1ebb573d8e044b83d30e65cdbf631df00233dfaee77a8258"
+    },
+    {
+      "path": "robot_agent/environments/__init__.py",
+      "bytes": 248,
+      "sha256": "2acdf3f19f82de802cd3b6224bdbbb5802a250f8ca222d386a96155402c59177"
+    },
+    {
+      "path": "robot_agent/environments/base.py",
+      "bytes": 4584,
+      "sha256": "386c44b9dedb31ed63c8ed7d24ce4875361454d03b9131e9b69cff5b3e26c7f2"
+    },
+    {
+      "path": "robot_agent/environments/robosuite_backend.py",
+      "bytes": 110394,
+      "sha256": "e0ece3fa72b2c2369283e780153a75fd523d8915ff32b033f820c0db635628d3"
+    },
+    {
+      "path": "robot_agent/main.py",
+      "bytes": 3375,
+      "sha256": "7e9a87c0c856faf3dd1cf82582f017ff71ae40970ac416d6b0706afe523fd0b6"
+    },
+    {
+      "path": "robot_agent/skills/__init__.py",
+      "bytes": 29,
+      "sha256": "84378018d27666548eccd9eb7a834980b9031f50327588f7527c60dcf0ea3370"
+    },
+    {
+      "path": "robot_agent/skills/analyze_supply.py",
+      "bytes": 7596,
+      "sha256": "44ba4898ddbf70f10d8bb1da7d2238afc0bac7eea8841d3cae0c73d2b265c22b"
+    },
+    {
+      "path": "robot_agent/skills/base.py",
+      "bytes": 516,
+      "sha256": "8fef80df2a967868f83c326b5cee29aec5d9dc433999e7a75703a19999e8b1a1"
+    },
+    {
+      "path": "robot_agent/skills/knowledge_mgr.py",
+      "bytes": 7043,
+      "sha256": "4495d053a32ba24d239a91b4dcf8095d38bb3a8f117f66ed5b9eeade860731f6"
+    },
+    {
+      "path": "robot_agent/skills/library.py",
+      "bytes": 4363,
+      "sha256": "842697d99222e6e3552463b0b33e846cf59fdf5cda635bd8ea29c0b53d329fa5"
+    },
+    {
+      "path": "robot_agent/skills/memory_mgr.py",
+      "bytes": 6390,
+      "sha256": "6d1969ce7f8eb11fe8ad952edac0d7afcf311b20e90a75443fc484833b61ed18"
+    },
+    {
+      "path": "robot_agent/skills/move.py",
+      "bytes": 20187,
+      "sha256": "f32462477826996782b24a51ff91a2eb35a1ed81b8a1f10968f1edb02cb27e13"
+    },
+    {
+      "path": "robot_agent/skills/pick_up.py",
+      "bytes": 34312,
+      "sha256": "df85bb13bcdaf412f0f4779be13308ea20c6033130c235b62a1ece9842c1ba6f"
+    },
+    {
+      "path": "robot_agent/skills/place_down.py",
+      "bytes": 7446,
+      "sha256": "887da136bbe41e7ca6a624e96ebe603658c2f2cf804ce338cd730491773b1b74"
+    },
+    {
+      "path": "robot_agent/skills/read_document.py",
+      "bytes": 4337,
+      "sha256": "da4ed5c6cc162c79471fe31eb76fb4c8994e98a03c31233f445189eff6c3730c"
+    },
+    {
+      "path": "robot_agent/skills/record_trajectory.py",
+      "bytes": 2042,
+      "sha256": "a979f429215d02221dcaa7fd13452f85fa85cee5cad22595735e096baefe0223"
+    },
+    {
+      "path": "robot_agent/skills/scripted_grasp.py",
+      "bytes": 22393,
+      "sha256": "dacccdbe41650e314b2a3f6f61b6e764403b05059c3fda8286944ea3306f19d9"
+    },
+    {
+      "path": "robot_agent/task_subprocess_runner.py",
+      "bytes": 11891,
+      "sha256": "1821fd7b64b14ba31f9f1bb16362fd1bde8a9e5cc40c26b4924e7b01bf17ac54"
+    },
+    {
+      "path": "robot_agent/workflows/__init__.py",
+      "bytes": 28,
+      "sha256": "9fb188154db6455a74f854ebb3500b812b04428c9603d7042c88b573fc4eb692"
+    },
+    {
+      "path": "robot_agent/workflows/task_flow.py",
+      "bytes": 1088,
+      "sha256": "cb255764fabf6fef7c17bdf5cdcdf881d6f7fece9832fc5e40e6aa34ee9a0489"
+    }
+  ]
+}

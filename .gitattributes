@@ -1,0 +1,7 @@
+# Evidence hashes bind exact bytes. Disable line-ending filters for every file.
+* -text
+
+*.zip binary
+*.pdf binary
+*.png binary
+*.mp4 binary

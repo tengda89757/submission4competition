@@ -1,0 +1,21 @@
+{
+  "competition": "JCIIOT 2026 RunningRobot",
+  "team": "BIPT-EDU",
+  "level": "L2",
+  "env_name": "FactorySorting3_3FO3ERRPH7X9",
+  "task_index": 1,
+  "max_score": 15,
+  "objective_score": 15,
+  "score_rule_version": "grasp_success_gate_l5_multi_v2",
+  "official_reference_commit": "129e94a9cff787031472045e19c24a4baeaefc48",
+  "method_summary": "Geometry-grounded A* mobile manipulation with continuous per-step recording, physics-only dual-arm grasp/release, transactional scene handoff, payload-aware source departure, fail-closed collision checks, and reconstructed-contact auditing.",
+  "source_trajectory": "trajectory_20260805_082054_OK.json",
+  "source_trajectory_sha256": "385a577e604096dcd87631ed242fb644f015f0784d9a720e7eb22661fc3fff66",
+  "realism_audit": "PASS",
+  "packaged_at": "2026-08-05T09:18:48+08:00",
+  "files": [
+    "trajectory.json",
+    "score.json",
+    "submission_manifest.json"
+  ]
+}

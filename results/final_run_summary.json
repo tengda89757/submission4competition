@@ -1,0 +1,208 @@
+{
+  "format_version": 1,
+  "generated_from_frozen_runs": true,
+  "official_reference_commit": "129e94a9cff787031472045e19c24a4baeaefc48",
+  "score_rule_version": "grasp_success_gate_l5_multi_v2",
+  "total_score": 100,
+  "total_maximum": 100,
+  "total_frames": 18332,
+  "total_elapsed_wall_seconds": 921.894,
+  "successful_grasps": 7,
+  "recorded_collision_frames": 0,
+  "unintended_material_contact_frames": 0,
+  "result": "PASS",
+  "levels": [
+    {
+      "level": "L1",
+      "environment": "FactorySorting1_3FO3ERFHISEM",
+      "run_stamp": "20260805_081914",
+      "score": 10,
+      "maximum": 10,
+      "elapsed_wall_seconds": 79.95,
+      "frames": 1793,
+      "events": 4,
+      "trajectory_sha256": "51d21dc3bfa50d6c07759198f9e100271b4444fd2a71c5efebb8025f3c990bbb",
+      "realism": {
+        "max_base_step_m": 0.03509999999999991,
+        "max_base_turn_rad": 0.026382315278225855,
+        "max_joint_step": 0.225176,
+        "max_object_step_m": 0.048384340421256194,
+        "max_object_turn_rad": 0.16052690011032267,
+        "held_frames": 957,
+        "held_contact_frames": 954,
+        "held_contact_fraction": 0.996865,
+        "recorded_collision_frames": 0,
+        "unintended_material_contact_frames": 0,
+        "limits": {
+          "max_base_step_m": 0.06,
+          "max_base_turn_rad": 0.08,
+          "max_joint_step": 0.35,
+          "max_object_step_m": 0.1,
+          "max_object_turn_rad": 0.25,
+          "min_held_contact_fraction": 0.99
+        },
+        "pass": true
+      },
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L2",
+      "environment": "FactorySorting3_3FO3ERRPH7X9",
+      "run_stamp": "20260805_082054",
+      "score": 15,
+      "maximum": 15,
+      "elapsed_wall_seconds": 75.26,
+      "frames": 1674,
+      "events": 4,
+      "trajectory_sha256": "385a577e604096dcd87631ed242fb644f015f0784d9a720e7eb22661fc3fff66",
+      "realism": {
+        "max_base_step_m": 0.03510128202786892,
+        "max_base_turn_rad": 0.0522714953252302,
+        "max_joint_step": 0.225462,
+        "max_object_step_m": 0.04796942731573871,
+        "max_object_turn_rad": 0.06496071862042799,
+        "held_frames": 1050,
+        "held_contact_frames": 1050,
+        "held_contact_fraction": 1.0,
+        "recorded_collision_frames": 0,
+        "unintended_material_contact_frames": 0,
+        "limits": {
+          "max_base_step_m": 0.06,
+          "max_base_turn_rad": 0.08,
+          "max_joint_step": 0.35,
+          "max_object_step_m": 0.1,
+          "max_object_turn_rad": 0.25,
+          "min_held_contact_fraction": 0.99
+        },
+        "pass": true
+      },
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L3",
+      "environment": "FactorySorting5_3FO3ERTPXEUT",
+      "run_stamp": "20260805_082229",
+      "score": 20,
+      "maximum": 20,
+      "elapsed_wall_seconds": 101.243,
+      "frames": 2402,
+      "events": 4,
+      "trajectory_sha256": "1c86f85abcd3abdd833fe66531ca39847548f9d66b63186286b27f766baa9955",
+      "realism": {
+        "max_base_step_m": 0.03511253337485083,
+        "max_base_turn_rad": 0.026600184935848568,
+        "max_joint_step": 0.225186,
+        "max_object_step_m": 0.03500644747757199,
+        "max_object_turn_rad": 0.04134867448085751,
+        "held_frames": 1180,
+        "held_contact_frames": 1178,
+        "held_contact_fraction": 0.998305,
+        "recorded_collision_frames": 0,
+        "unintended_material_contact_frames": 0,
+        "limits": {
+          "max_base_step_m": 0.06,
+          "max_base_turn_rad": 0.08,
+          "max_joint_step": 0.35,
+          "max_object_step_m": 0.1,
+          "max_object_turn_rad": 0.25,
+          "min_held_contact_fraction": 0.99
+        },
+        "pass": true
+      },
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L4",
+      "environment": "FactorySorting7_3FO3ERFKY9RN",
+      "run_stamp": "20260805_082430",
+      "score": 25,
+      "maximum": 25,
+      "elapsed_wall_seconds": 117.107,
+      "frames": 2324,
+      "events": 4,
+      "trajectory_sha256": "c4fc0a5c4c5623f154d079078661c8bf27515108602e0da919365aa7cfc59703",
+      "realism": {
+        "max_base_step_m": 0.03510014244985419,
+        "max_base_turn_rad": 0.052433872103199955,
+        "max_joint_step": 0.299188,
+        "max_object_step_m": 0.052563887223072994,
+        "max_object_turn_rad": 0.11081605065541619,
+        "held_frames": 997,
+        "held_contact_frames": 997,
+        "held_contact_fraction": 1.0,
+        "recorded_collision_frames": 0,
+        "unintended_material_contact_frames": 0,
+        "limits": {
+          "max_base_step_m": 0.06,
+          "max_base_turn_rad": 0.08,
+          "max_joint_step": 0.35,
+          "max_object_step_m": 0.1,
+          "max_object_turn_rad": 0.25,
+          "min_held_contact_fraction": 0.99
+        },
+        "pass": true
+      },
+      "status": "PASS",
+      "failed_checks": []
+    },
+    {
+      "level": "L5",
+      "environment": "FactorySorting9_3FO3ERT2C5FP",
+      "run_stamp": "20260805_080916",
+      "score": 30,
+      "maximum": 30,
+      "elapsed_wall_seconds": 548.334,
+      "frames": 10139,
+      "events": 18,
+      "trajectory_sha256": "a29954037a8c65dd6301a794e52024f676b36d82aedb8444b1a6aee758ab9a13",
+      "realism": {
+        "max_base_step_m": 0.03511253337485059,
+        "max_base_turn_rad": 0.02747562072670255,
+        "max_joint_step": 0.22528299999999998,
+        "max_object_step_m": 0.08643319433527845,
+        "max_object_turn_rad": 0.1798540680457216,
+        "held_frames": 4285,
+        "held_contact_frames": 4267,
+        "held_contact_fraction": 0.995799,
+        "recorded_collision_frames": 0,
+        "unintended_material_contact_frames": 0,
+        "limits": {
+          "max_base_step_m": 0.06,
+          "max_base_turn_rad": 0.08,
+          "max_joint_step": 0.35,
+          "max_object_step_m": 0.1,
+          "max_object_turn_rad": 0.25,
+          "min_held_contact_fraction": 0.99
+        },
+        "pass": true
+      },
+      "status": "PASS",
+      "failed_checks": [],
+      "final_target_distances_m": {
+        "white_tote_b01_left_front": 0.065845,
+        "white_tote_b01_left_center": 0.667618,
+        "white_tote_b01_left_back": 0.646361
+      },
+      "per_object_contact": {
+        "white_tote_b01_left_front": {
+          "held_frames": 1411,
+          "contact_frames": 1403,
+          "contact_fraction": 0.99433
+        },
+        "white_tote_b01_left_center": {
+          "held_frames": 1437,
+          "contact_frames": 1427,
+          "contact_fraction": 0.993041
+        },
+        "white_tote_b01_left_back": {
+          "held_frames": 1437,
+          "contact_frames": 1437,
+          "contact_fraction": 1.0
+        }
+      }
+    }
+  ]
+}

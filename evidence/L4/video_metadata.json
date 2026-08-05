@@ -1,0 +1,23 @@
+{
+  "format_version": 1,
+  "source_trajectory": "trajectory_20260805_082430_OK.json",
+  "source_trajectory_sha256": "c4fc0a5c4c5623f154d079078661c8bf27515108602e0da919365aa7cfc59703",
+  "environment": "FactorySorting7_3FO3ERFKY9RN",
+  "camera_views": [
+    "agentview",
+    "robot0_robotview"
+  ],
+  "source_frames": 2324,
+  "encoded_frames": 2324,
+  "subsample_step": 1,
+  "fps": 20.0,
+  "duration_seconds": 116.2,
+  "resolution": [
+    768,
+    288
+  ],
+  "video_file": "L4_dualview_full.mp4",
+  "video_sha256": "049dee3d205214d768bb2284539ccaa1b660531279d7a6c86e3247cd2456d7f7",
+  "video_bytes": 3245691,
+  "render_wall_seconds": 30.925
+}
