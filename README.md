@@ -19,6 +19,7 @@
 
 - Comprehensive technical report: [TECHNICAL_REPORT.md](TECHNICAL_REPORT.md)
 - Typeset technical report: [output/pdf/TECHNICAL_REPORT.pdf](output/pdf/TECHNICAL_REPORT.pdf)
+- LaTeX source and template notes: [report/latex/](report/latex/)
 - Official L1–L5 ZIPs and checksums: [submission/](submission/)
 - Per-level trajectories, scores, and realism audits: [evidence/](evidence/)
 - Full L1–L5 dual-view videos: [videos/](videos/)
@@ -34,6 +35,16 @@ python verify_submission.py
 ```
 
 The verifier uses only Python's standard library. It checks that exactly one ZIP exists for every level, validates SHA-256, recomputes the objective score from the official semantic-map centers, and verifies the pinned reference and manifest fields.
+
+## Build the technical report
+
+The professional report edition uses KOMA-Script `scrreprt`, CTeX/XeLaTeX, TikZ, and PGFPlots. `TECHNICAL_REPORT.md` remains the single content source; the build regenerates the LaTeX body, resolves the bibliography, checks the log for missing references, glyphs, and overfull boxes, and writes the stable PDF path shown above.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File report/build_technical_report_latex.ps1
+```
+
+If `python` is not directly available, set `JCIIOT_REPORT_PYTHON` to the full path of a Python 3 interpreter before running the command.
 
 For complete reproducibility details, third-party acknowledgements, novelty claims, quantitative analysis, strengths, and limitations, see the technical report.
 

@@ -1,0 +1,37 @@
+\documentclass[
+  a4paper,
+  fontsize=11pt,
+  headings=small,
+  numbers=noenddot,
+  open=any,
+  bibliography=totoc
+]{scrreprt}
+
+\usepackage{jciiot-report}
+\usepackage[
+  backend=biber,
+  style=numeric-comp,
+  sorting=none,
+  giveninits=true,
+  maxbibnames=12,
+  doi=true,
+  url=true,
+  isbn=false
+]{biblatex}
+\addbibresource{references.bib}
+\AtBeginBibliography{\small}
+
+\input{figures.tex}
+
+\hypersetup{
+  pdftitle={Reality-Constrained Mobile Manipulation for JCIIOT 2026 RunningRobot},
+  pdfauthor={Team BIPT-EDU},
+  pdfsubject={Technical description, novelty, experimental results, limitations, and verification},
+  pdfkeywords={JCIIOT, MuJoCo, robosuite, mobile manipulation, trajectory audit, physical realism}
+}
+
+\begin{document}
+  \MakeReportCover
+  \ReportFrontMatter
+  \input{generated/body.tex}
+\end{document}

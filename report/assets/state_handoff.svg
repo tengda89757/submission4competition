@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520" role="img" aria-labelledby="title desc">
+  <title id="title">Transactional state handoff</title>
+  <desc id="desc">Navigation state N initializes the wrapped grasp environment exactly, physical grasp produces state G, then the target and robot state from G are merged with non-target material state from N.</desc>
+  <defs>
+    <style>
+      .title { font: 700 34px Arial, 'Noto Sans SC', sans-serif; fill: #173b57; }
+      .head { font: 700 21px Arial, 'Noto Sans SC', sans-serif; fill: #213543; }
+      .body { font: 400 17px Arial, 'Noto Sans SC', sans-serif; fill: #627684; }
+      .label { font: 700 17px Arial, 'Noto Sans SC', sans-serif; fill: #173b57; }
+      .box { stroke: #36566a; stroke-width: 2.2; rx: 11; }
+      .arrow { stroke: #466879; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .commit { stroke: #16877b; stroke-width: 3; fill: none; marker-end: url(#arrowTeal); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#466879"/>
+    </marker>
+    <marker id="arrowTeal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16877b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#173b57" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="520" fill="#ffffff"/>
+  <text class="title" x="700" y="52" text-anchor="middle">Transactional state handoff</text>
+  <text class="body" x="700" y="82" text-anchor="middle">Exact initialization, physical rollout, selective commit</text>
+
+  <rect class="box" x="70" y="128" width="255" height="108" fill="#e7f1f6" filter="url(#shadow)"/>
+  <text class="head" x="197" y="166" text-anchor="middle">Navigation state N</text>
+  <text class="body" x="197" y="195" text-anchor="middle">all material poses</text>
+  <text class="body" x="197" y="218" text-anchor="middle">all non-base robot joints</text>
+
+  <rect class="box" x="405" y="128" width="255" height="108" fill="#e4f2ef" filter="url(#shadow)"/>
+  <text class="head" x="532" y="166" text-anchor="middle">Exact wrapper init</text>
+  <text class="body" x="532" y="195" text-anchor="middle">reset hook reapplies N</text>
+  <text class="body" x="532" y="218" text-anchor="middle">no spawn-state rollback</text>
+
+  <rect class="box" x="740" y="128" width="255" height="108" fill="#fbeedf" filter="url(#shadow)"/>
+  <text class="head" x="867" y="166" text-anchor="middle">Physical grasp</text>
+  <text class="body" x="867" y="195" text-anchor="middle">stepped dual-arm OSC</text>
+  <text class="body" x="867" y="218" text-anchor="middle">produces grasp state G</text>
+
+  <rect class="box" x="1075" y="128" width="255" height="108" fill="#eeeaf4" filter="url(#shadow)"/>
+  <text class="head" x="1202" y="166" text-anchor="middle">Selective commit</text>
+  <text class="body" x="1202" y="195" text-anchor="middle">merge by ownership</text>
+  <text class="body" x="1202" y="218" text-anchor="middle">then resume navigation</text>
+
+  <path class="arrow" d="M335 182 H392"/>
+  <path class="arrow" d="M670 182 H727"/>
+  <path class="arrow" d="M1005 182 H1062"/>
+
+  <rect class="box" x="315" y="318" width="330" height="92" fill="#fbeedf"/>
+  <text class="label" x="480" y="351" text-anchor="middle">Commit from G</text>
+  <text class="body" x="480" y="380" text-anchor="middle">target object + robot state</text>
+
+  <rect class="box" x="755" y="318" width="330" height="92" fill="#e7f1f6"/>
+  <text class="label" x="920" y="351" text-anchor="middle">Preserve from N</text>
+  <text class="body" x="920" y="380" text-anchor="middle">every non-target material state</text>
+
+  <path class="commit" d="M1202 246 V282 H480 V305"/>
+  <path class="commit" d="M1202 282 H920 V305"/>
+
+  <rect x="455" y="452" width="490" height="48" rx="24" fill="#173b57"/>
+  <text x="700" y="483" text-anchor="middle" style="font:700 19px Arial,'Noto Sans SC',sans-serif;fill:#ffffff">Committed live state: continuity preserved across L5 cycles</text>
+  <path class="commit" d="M480 420 V438 H685"/>
+  <path class="commit" d="M920 420 V438 H715"/>
+</svg>

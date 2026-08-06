@@ -1,0 +1,286 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jciiot-report}[2026/08/05 JCIIOT professional technical-report style]
+
+\RequirePackage[scheme=plain,fontset=none]{ctex}
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Cambria}
+\setsansfont{Arial}[Scale=0.94]
+\setmonofont{Consolas}[Scale=0.88]
+\IfFontExistsTF{Noto Serif SC}{
+  \setCJKmainfont{Noto Serif SC}
+  \setCJKsansfont{Noto Sans SC}
+  \setCJKmonofont{Noto Sans SC}
+}{
+  \setCJKmainfont{SimSun}
+  \setCJKsansfont{SimHei}
+  \setCJKmonofont{SimSun}
+}
+
+\RequirePackage{microtype}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,matrix,positioning,shadows.blur}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{tabularray}
+\UseTblrLibrary{booktabs}
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{enumitem}
+\RequirePackage{fancyvrb}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
+\RequirePackage{ragged2e}
+\RequirePackage{needspace}
+\RequirePackage{placeins}
+\RequirePackage{scrlayer-scrpage}
+\RequirePackage{xurl}
+\RequirePackage{hyperref}
+\RequirePackage[nameinlink,capitalise,noabbrev]{cleveref}
+\RequirePackage{bookmark}
+
+\definecolor{ReportNavy}{HTML}{173B57}
+\definecolor{ReportBlue}{HTML}{176B91}
+\definecolor{ReportTeal}{HTML}{16877B}
+\definecolor{ReportOrange}{HTML}{D8782C}
+\definecolor{ReportInk}{HTML}{213543}
+\definecolor{ReportMuted}{HTML}{627684}
+\definecolor{ReportRule}{HTML}{C6D2D8}
+\definecolor{ReportMist}{HTML}{F2F6F8}
+\definecolor{ReportPaleBlue}{HTML}{E7F1F6}
+\definecolor{ReportPaleTeal}{HTML}{E4F2EF}
+\definecolor{ReportPaleOrange}{HTML}{FBEEDF}
+\definecolor{ReportPurple}{HTML}{6E5A8A}
+
+\color{ReportInk}
+\KOMAoptions{DIV=10,BCOR=0mm,headsepline=0.35pt}
+\recalctypearea
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.42em plus 0.10em minus 0.06em}
+\setlength{\emergencystretch}{2.5em}
+\linespread{1.03}
+\raggedbottom
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+
+\setkomafont{disposition}{\sffamily\bfseries\color{ReportNavy}}
+\setkomafont{chapter}{\fontsize{22}{25}\selectfont}
+\setkomafont{section}{\fontsize{13.5}{16}\selectfont\color{ReportBlue}}
+\setkomafont{subsection}{\fontsize{11.2}{13.5}\selectfont\color{ReportTeal}}
+\setkomafont{pageheadfoot}{\sffamily\fontsize{7.7}{9}\selectfont\color{ReportMuted}}
+\setkomafont{pagenumber}{\sffamily\bfseries\color{ReportNavy}}
+\renewcommand*{\chapterformat}{%
+  \makebox[2.15em][l]{\color{ReportOrange}\fontsize{28}{30}\selectfont\thechapter\autodot}%
+}
+\RedeclareSectionCommand[beforeskip=-1.1\baselineskip,afterskip=0.75\baselineskip]{chapter}
+\RedeclareSectionCommand[beforeskip=1.05\baselineskip,afterskip=0.30\baselineskip]{section}
+\RedeclareSectionCommand[beforeskip=0.80\baselineskip,afterskip=0.20\baselineskip]{subsection}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\DeclareTOCStyleEntry[beforeskip=0.35em]{tocline}{chapter}
+\DeclareTOCStyleEntries[beforeskip=0pt]{tocline}{section,subsection}
+
+\clearpairofpagestyles
+\automark[section]{chapter}
+\ihead{\headmark}
+\ohead{JCIIOT 2026 \textperiodcentered\ Team BIPT-EDU}
+\cfoot{\pagemark}
+\addtokomafont{headsepline}{\color{ReportRule}}
+\pagestyle{scrheadings}
+\renewcommand*{\chapterpagestyle}{scrheadings}
+
+\captionsetup{
+  font=small,
+  labelfont={bf,sf,color=ReportNavy},
+  textfont={color=ReportMuted},
+  labelsep=quad,
+  justification=centering,
+  singlelinecheck=true,
+  skip=5pt
+}
+\setlength{\textfloatsep}{13pt plus 3pt minus 3pt}
+\setlength{\floatsep}{11pt plus 3pt minus 2pt}
+\setlength{\intextsep}{11pt plus 3pt minus 2pt}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.70}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.72}
+
+\setlist[itemize]{leftmargin=1.45em,itemsep=0.22em,topsep=0.25em,parsep=0pt}
+\setlist[enumerate]{leftmargin=1.65em,itemsep=0.22em,topsep=0.25em,parsep=0pt}
+\setlist[itemize,1]{label=\textcolor{ReportTeal}{\small\textbullet}}
+\setlist[enumerate,1]{label=\textcolor{ReportBlue}{\bfseries\arabic*.}}
+
+\hypersetup{
+  unicode=true,
+  colorlinks=true,
+  linkcolor=ReportBlue,
+  citecolor=ReportTeal,
+  urlcolor=ReportBlue,
+  pdfborder={0 0 0},
+  bookmarksnumbered=true,
+  bookmarksopen=true
+}
+\urlstyle{same}
+
+\newcommand{\CodeInline}[1]{{\texttt{\footnotesize\color{ReportNavy}#1}}}
+\newcommand{\PASS}{\textcolor{ReportTeal}{\sffamily\bfseries PASS}}
+\newcommand{\FAIL}{\textcolor{red!70!black}{\sffamily\bfseries FAIL}}
+
+\DefineVerbatimEnvironment{ReportCode}{Verbatim}{
+  fontsize=\scriptsize,
+  formatcom=\color{ReportInk},
+  frame=single,
+  rulecolor=\color{ReportRule},
+  framesep=3mm,
+  xleftmargin=2mm,
+  xrightmargin=2mm
+}
+
+\newtcolorbox{EvidenceBox}[1][]{
+  enhanced,
+  breakable,
+  colback=ReportPaleTeal,
+  colframe=ReportTeal,
+  boxrule=0.6pt,
+  arc=1.2mm,
+  left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,
+  borderline west={2.3pt}{0pt}{ReportTeal},
+  fonttitle=\sffamily\bfseries,
+  coltitle=ReportNavy,
+  title={Evidence statement},
+  #1
+}
+
+\newtcolorbox{ClaimBox}[1][]{
+  enhanced,
+  breakable,
+  colback=ReportPaleOrange,
+  colframe=ReportOrange,
+  boxrule=0.55pt,
+  arc=1.2mm,
+  left=3.5mm,right=3.5mm,top=2.5mm,bottom=2.5mm,
+  fonttitle=\sffamily\bfseries,
+  coltitle=ReportNavy,
+  title={Claim boundary},
+  #1
+}
+
+\newcommand{\MetricCard}[3]{%
+  \begin{tcolorbox}[
+    width=0.47\linewidth,
+    height=28mm,
+    valign=center,
+    halign=center,
+    colback=#3,
+    colframe=ReportRule,
+    boxrule=0.55pt,
+    arc=1.5mm,
+    nobeforeafter,
+    box align=center,
+    left=2mm,right=2mm,top=1mm,bottom=1mm
+  ]
+  {\sffamily\bfseries\fontsize{20}{22}\selectfont\color{ReportNavy}#1}\\[-1pt]
+  {\sffamily\fontsize{8.5}{10.5}\selectfont\color{ReportMuted}#2}
+  \end{tcolorbox}%
+}
+
+\newcommand{\MakeReportCover}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[ReportNavy] (current page.north west) rectangle ([yshift=-31mm]current page.north east);
+      \fill[ReportTeal] ([yshift=-31mm]current page.north west) rectangle ([yshift=-33.2mm]current page.north east);
+      \draw[ReportRule,line width=0.5pt] ([xshift=18mm,yshift=17mm]current page.south west) -- ([xshift=-18mm,yshift=17mm]current page.south east);
+      \draw[white,opacity=0.13,line width=1pt] ([xshift=-8mm,yshift=-8mm]current page.north east) circle (22mm);
+      \draw[white,opacity=0.13,line width=1pt] ([xshift=-21mm,yshift=-8mm]current page.north east) circle (13mm);
+      \draw[white,opacity=0.13,line width=1pt] ([xshift=-33mm,yshift=-8mm]current page.north east) circle (7mm);
+    \end{tikzpicture}
+    \vspace*{5mm}
+    {\sffamily\bfseries\fontsize{10}{12}\selectfont\color{white}\MakeUppercase{Technical Report}}\hfill
+    {\sffamily\fontsize{9}{11}\selectfont\color{white}JCIIOT 2026 RunningRobot}
+
+    \vspace*{32mm}
+    {\sffamily\bfseries\fontsize{28}{33}\selectfont\color{ReportNavy}
+      Reality-Constrained\\[2mm]Mobile Manipulation\par}
+    \vspace{4mm}
+    {\sffamily\fontsize{14}{18}\selectfont\color{ReportBlue}
+      A full-score, continuity-audited solution for factory sorting\par}
+    \vspace{7mm}
+    {\color{ReportOrange}\rule{33mm}{1.7pt}}
+
+    \vspace{11mm}
+    \begin{center}
+      \MetricCard{100 / 100}{objective score}{ReportPaleBlue}\hfill
+      \MetricCard{5 / 5}{strict realism audits passed}{ReportPaleTeal}
+
+      \vspace{2.5mm}
+      \MetricCard{18,332}{recorded physics frames}{ReportPaleOrange}\hfill
+      \MetricCard{5 / 5}{full-frame videos verified}{ReportMist}
+    \end{center}
+
+    \vfill
+    \begin{minipage}[b]{0.60\linewidth}
+      {\sffamily\bfseries\large\color{ReportNavy}Team BIPT-EDU}\par
+      \vspace{1.5mm}
+      {\small\color{ReportMuted}
+       Report date: 5 August 2026\\
+       Official reference commit:\\[-0.4mm]
+       \texttt{\scriptsize 129e94a9cff787031472045e19c24a4baeaefc48}}
+    \end{minipage}\hfill
+    \begin{minipage}[b]{0.34\linewidth}
+      \raggedleft\sffamily\footnotesize\color{ReportMuted}
+      Geometry-grounded execution\\
+      Physics-step evidence\\
+      Fail-closed verification
+    \end{minipage}
+    \vspace*{7mm}
+  \end{titlepage}
+}
+
+\newcommand{\ReportFrontMatter}{%
+  \pagenumbering{roman}
+  \setcounter{page}{1}
+  \chapter*{Document control}
+  \addcontentsline{toc}{chapter}{Document control}
+  \begin{tblr}{
+    width=\linewidth,
+    colspec={Q[l,0.9] Q[l,2.4]},
+    row{odd}={bg=ReportMist},
+    hlines={0.35pt,ReportRule},
+    vlines={0.25pt,ReportRule},
+    column{1}={font=\sffamily\bfseries\color{ReportNavy}},
+    cells={font=\small,valign=m},
+    colsep=4pt,rowsep=4pt
+  }
+    Document & JCIIOT 2026 RunningRobot Technical Report \\
+    Team & BIPT-EDU \\
+    Revision & 2.0 --- professional LaTeX edition \\
+    Evidence freeze & Submitted L1--L5 executions listed in \CodeInline{results/final\_run\_summary.json} \\
+    Result & 100/100; five realism audits \PASS; five full-frame videos \PASS \\
+    Scope & Fixed official simulator scenes; claims are bounded by \cref{chap:limitations} \\
+  \end{tblr}
+
+  \begin{EvidenceBox}[title={Evidence and claim discipline}]
+  All quantitative results are generated from the frozen submitted trajectories and their associated score, realism-audit, and video-verification records. Objective score and realism evidence are conjunctive release gates. The report does not claim unseen-scene generalization or real-robot safety.
+  \end{EvidenceBox}
+
+  \clearpage
+  \begingroup
+    \small
+    \tableofcontents
+  \endgroup
+  \clearpage
+  \listoffigures
+  \addcontentsline{toc}{chapter}{List of Figures}
+  \listoftables
+  \addcontentsline{toc}{chapter}{List of Tables}
+  \clearpage
+  \pagenumbering{arabic}
+  \setcounter{page}{1}
+}

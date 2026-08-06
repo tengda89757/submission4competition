@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="720" viewBox="0 0 1400 720" role="img" aria-labelledby="title desc">
+  <title id="title">Layered control and evidence architecture</title>
+  <desc id="desc">A four-layer architecture connecting task semantics, geometry, execution, and evidence through a fail-closed release gate.</desc>
+  <defs>
+    <style>
+      .title { font: 700 34px Arial, 'Noto Sans SC', sans-serif; fill: #173b57; }
+      .lane { font: 700 19px Arial, 'Noto Sans SC', sans-serif; fill: #173b57; letter-spacing: 1px; }
+      .node { font: 700 20px Arial, 'Noto Sans SC', sans-serif; fill: #213543; }
+      .small { font: 400 17px Arial, 'Noto Sans SC', sans-serif; fill: #627684; }
+      .gate { font: 700 21px Arial, 'Noto Sans SC', sans-serif; fill: #ffffff; }
+      .box { stroke: #36566a; stroke-width: 2.2; rx: 10; }
+      .arrow { stroke: #466879; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .feed { stroke: #16877b; stroke-width: 2.6; fill: none; marker-end: url(#arrowTeal); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#466879"/>
+    </marker>
+    <marker id="arrowTeal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16877b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-15%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#173b57" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="720" fill="#ffffff"/>
+  <text class="title" x="700" y="52" text-anchor="middle">Control and evidence architecture</text>
+
+  <rect x="30" y="88" width="1340" height="104" rx="14" fill="#f2f6f8"/>
+  <text class="lane" x="58" y="120">SEMANTICS</text>
+  <rect class="box" x="250" y="108" width="290" height="62" fill="#e7f1f6" filter="url(#shadow)"/>
+  <text class="node" x="395" y="135" text-anchor="middle">Official task identifiers</text>
+  <text class="small" x="395" y="158" text-anchor="middle">source, destination, level</text>
+  <rect class="box" x="710" y="108" width="405" height="62" fill="#e4f2ef" filter="url(#shadow)"/>
+  <text class="node" x="912" y="135" text-anchor="middle">Deterministic semantic plan</text>
+  <text class="small" x="912" y="158" text-anchor="middle">move → pick_up → move → place_down</text>
+  <path class="arrow" d="M548 139 H697"/>
+
+  <rect x="30" y="208" width="1340" height="170" rx="14" fill="#f8fafb"/>
+  <text class="lane" x="58" y="240">GEOMETRY</text>
+  <rect class="box" x="210" y="253" width="280" height="78" fill="#e7f1f6"/>
+  <text class="node" x="350" y="282" text-anchor="middle">Semantic map + grid</text>
+  <text class="small" x="350" y="308" text-anchor="middle">inflated 8-connected A*</text>
+  <rect class="box" x="560" y="253" width="280" height="78" fill="#e4f2ef"/>
+  <text class="node" x="700" y="282" text-anchor="middle">Live object geometry</text>
+  <text class="small" x="700" y="308" text-anchor="middle">pose + grasp sites</text>
+  <rect class="box" x="910" y="253" width="280" height="78" fill="#fbeedf"/>
+  <text class="node" x="1050" y="282" text-anchor="middle">Payload clearance</text>
+  <text class="small" x="1050" y="308" text-anchor="middle">departure lane + turn arc</text>
+
+  <rect x="30" y="394" width="1340" height="120" rx="14" fill="#f2f6f8"/>
+  <text class="lane" x="58" y="426">EXECUTION</text>
+  <rect class="box" x="285" y="420" width="830" height="68" fill="#fbeedf" filter="url(#shadow)"/>
+  <text class="node" x="700" y="450" text-anchor="middle">Bounded base motion + dual-arm OSC + carried-object attachment</text>
+  <text class="small" x="700" y="476" text-anchor="middle">fail closed on missing controller, route, clearance, contact, lift, lowering, or release</text>
+  <path class="feed" d="M350 332 V382 H510 V408"/>
+  <path class="feed" d="M700 332 V408"/>
+  <path class="feed" d="M1050 332 V382 H890 V408"/>
+
+  <rect x="30" y="530" width="1340" height="146" rx="14" fill="#f8fafb"/>
+  <text class="lane" x="58" y="562">EVIDENCE</text>
+  <rect class="box" x="205" y="558" width="260" height="70" fill="#eeeaf4"/>
+  <text class="node" x="335" y="587" text-anchor="middle">MuJoCo state</text>
+  <text class="small" x="335" y="613" text-anchor="middle">one record per physics step</text>
+  <rect class="box" x="535" y="558" width="335" height="70" fill="#e7f1f6"/>
+  <text class="node" x="702" y="587" text-anchor="middle">Independent verification</text>
+  <text class="small" x="702" y="613" text-anchor="middle">score + contact audit + full video</text>
+  <rect x="940" y="558" width="260" height="70" rx="10" fill="#173b57" filter="url(#shadow)"/>
+  <text class="gate" x="1070" y="587" text-anchor="middle">Release gate</text>
+  <text class="small" x="1070" y="613" text-anchor="middle" fill="#d9e9f1">all checks must pass</text>
+  <path class="arrow" d="M700 489 V523 H335 V546"/>
+  <path class="arrow" d="M473 593 H522"/>
+  <path class="arrow" d="M878 593 H927"/>
+</svg>

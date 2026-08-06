@@ -13,8 +13,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 308,
-      "sha256": "ce967f6d1e736cf1a7d92f1a7a8c1f03fe405d61ab5e20a481199fe37bb67fa7"
+      "bytes": 328,
+      "sha256": "0c36240001e675313c1538bb3542de211c81e18ea81c8b793ff14a8f2c0f3150"
     },
     {
       "path": "evidence/L1/evidence_manifest.json",
@@ -198,13 +198,18 @@
     },
     {
       "path": "output/pdf/TECHNICAL_REPORT.pdf",
-      "bytes": 1812832,
-      "sha256": "d444ac54c773f20eb03bbee7386ce901b357dcd15c6b0018e2611989cab9855d"
+      "bytes": 1076467,
+      "sha256": "583727bb34c898d02d5a03df5fbd2740a0822fe43b6d3e6c128873b99647771e"
     },
     {
       "path": "README.md",
-      "bytes": 2109,
-      "sha256": "5006409a1a7da73ea404041af6cc59b283acabc39fd72e329d5abd183e3bfc57"
+      "bytes": 2773,
+      "sha256": "6581ad0fe5f7e2be2e5cfec8112feea596385f04d8bb6467daf4d338f0c5e75b"
+    },
+    {
+      "path": "report/assets/architecture_detail.svg",
+      "bytes": 5107,
+      "sha256": "ccefbed10ecbe6f956884adb2fdc497361bafdf92b956e60f46d035abd0ad26f"
     },
     {
       "path": "report/assets/continuity_margins.png",
@@ -215,6 +220,11 @@
       "path": "report/assets/l5_final_placement.png",
       "bytes": 107672,
       "sha256": "867bf2562858504bf6dc823671925e354cad72c7c453b0fc5e462f600cb2af6c"
+    },
+    {
+      "path": "report/assets/state_handoff.svg",
+      "bytes": 4357,
+      "sha256": "e37e7c9bd5ddd096178f9d3d9df1d417361890ae4743d9525f3ddc4b89b8a129"
     },
     {
       "path": "report/assets/system_architecture.png",
@@ -230,6 +240,46 @@
       "path": "report/build_technical_report.py",
       "bytes": 25603,
       "sha256": "58ffb1e20ca4273a542e4d84281c309c320eb9c2a38eec22b2312b15d8af03df"
+    },
+    {
+      "path": "report/build_technical_report_latex.ps1",
+      "bytes": 3200,
+      "sha256": "c4f7cfbc5f942edbf6e1180732736b0e08bef1e88ba61fc9a6778512e254cef5"
+    },
+    {
+      "path": "report/build_technical_report_latex.py",
+      "bytes": 10816,
+      "sha256": "8241ff32dd8738ae3e74486f3a6a079a5ce1cf91302e407a2e7b641028719f49"
+    },
+    {
+      "path": "report/latex/figures.tex",
+      "bytes": 12165,
+      "sha256": "11b5aed3bc34fcdf151f349e6dfe45b2678f56d908012fc38148c7c6ba0c7363"
+    },
+    {
+      "path": "report/latex/generated/body.tex",
+      "bytes": 38141,
+      "sha256": "a043cd6fff093fbb80707ba480cf391ed367d963c901ff89224490ffda041121"
+    },
+    {
+      "path": "report/latex/jciiot-report.sty",
+      "bytes": 9707,
+      "sha256": "ce729030b62b3fb6a9e15fcdce354cd1ba2d233086ebb0a6e2d772372cc6b9a6"
+    },
+    {
+      "path": "report/latex/README.md",
+      "bytes": 1056,
+      "sha256": "cdf1ab7958ddda0e8ef639d619eca0146ede00ac85445a18a66445f6391a7007"
+    },
+    {
+      "path": "report/latex/references.bib",
+      "bytes": 3492,
+      "sha256": "0625a47450312fc777b3caf478dc7448dc80f911155061dcf8f9308d771685c5"
+    },
+    {
+      "path": "report/latex/technical_report.tex",
+      "bytes": 820,
+      "sha256": "a83502fff044ba4f2679cc9ba69be2da919e02a7cde777790b32c323e2ee6eec"
     },
     {
       "path": "results/final_run_summary.json",
@@ -588,8 +638,8 @@
     },
     {
       "path": "TECHNICAL_REPORT.md",
-      "bytes": 32290,
-      "sha256": "096f16a59dba2e4680d79daca0cf7fe6c24079a36736862de0033c46595fd230"
+      "bytes": 31332,
+      "sha256": "1977b7cc6361eb74f3852ddc88f734f1eb33052c706b53ba850430e7acc04057"
     },
     {
       "path": "third_party_licenses/robomimic_LICENSE.txt",

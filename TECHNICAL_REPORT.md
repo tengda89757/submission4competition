@@ -12,11 +12,11 @@ This report describes a mobile-manipulation solution for the five JCIIOT 2026 Ru
 
 The solution is a geometry-grounded, fail-closed execution stack. A semantic plan selects `move -> pick_up -> move -> place_down`; an 8-connected A* planner produces collision-aware routes; a dual-arm operational-space controller performs approach, grasp, lift, lowering, and release; and a payload-aware departure planner prevents a carried tote from sweeping through adjacent source objects. The simulator state is recorded after every physical step. A separate realism auditor then checks frame-to-frame continuity, reconstructs MuJoCo contacts during every held frame, and rejects any recorded collision or unintended material contact.
 
-The evaluated L1-L5 runs score 10/10, 15/15, 20/20, 25/25, and 30/30, for 100/100 overall. They contain 18,332 recorded frames and seven successful grasps. Across all five runs, the maximum base translation is 0.035113 m per recorded frame, the maximum base rotation is 0.052434 rad per frame, recorded collision frames are zero, and held-material-to-unheld-material contact frames are zero. Gripper contact is present for 99.38% to 100% of held frames, depending on level. Each L1-L5 video contains exactly one rendered frame for every source trajectory frame and passes a complete decode test.
-
-The execution profile balances speed with physical credibility. Navigation operates at 0.70 m/s with 20 Hz control, yielding at most about 3.5 cm of commanded translation per control frame. Route efficiency comes from source-departure geometry, accurate staging, and global replanning from open space. The implementation never gains speed by skipping recorded physics frames, teleporting the robot, or transporting objects directly between distant poses.
-
 ![System architecture and evidence flow](report/assets/system_architecture.png)
+
+The evaluated L1-L5 runs score 10/10, 15/15, 20/20, 25/25, and 30/30, for 100/100 overall. They contain 18,332 recorded frames and seven successful grasps. Across all five runs, the maximum base translation is 0.035113 m per recorded frame, the maximum base rotation is 0.052434 rad per frame, recorded collision frames are zero, and held-material-to-unheld-material contact frames are zero. Aggregated by level, gripper contact is present for 99.5799% to 100% of held frames; the lowest per-object value in L5 is 99.3041%. Each L1-L5 video contains exactly one rendered frame for every source trajectory frame and passes a complete decode test.
+
+Navigation runs at 0.70 m/s and 20 Hz, limiting commanded translation to about 3.5 cm per frame. Efficiency comes from source-departure geometry, accurate staging, and replanning from open space - never from skipped physics frames, teleports, or direct object relocation.
 
 ## 2. Task, scope, and evidence model
 
@@ -41,14 +41,9 @@ Score and realism are conjunctive release gates. A run is accepted only if it re
 
 The implementation explicitly prohibits the following as runtime fallbacks:
 
-- directly placing an ungrasped object at a target;
-- changing an object from source pose to destination pose in one state transition;
-- moving the base from one waypoint to another without bounded intermediate states;
-- turning a carried payload through neighboring material objects;
-- ignoring contact with unheld materials;
-- fabricating missing physics results as success.
-
-Direct kinematic `pick_object()` and `place_object()` APIs are disabled in the MuJoCo backend. Grasp and release must succeed through the physical skill path. Initialization state may be copied into a newly created wrapped grasp environment, but the copied state equals the last recorded navigation state and therefore does not create an observable trajectory discontinuity.
+- grasp and release only through the physical skill path - no direct kinematic pick/place API, ungrasped placement, or one-step object relocation;
+- no unrecorded base jump or carried-payload turn through neighboring materials;
+- no ignored unheld-material contact, wrapped reset that differs from the last recorded navigation state, or fabricated missing-physics success.
 
 ## 3. Technical description
 
@@ -56,22 +51,7 @@ Direct kinematic `pick_object()` and `place_object()` APIs are disabled in the M
 
 The system separates task semantics, geometry, execution, and evidence:
 
-```text
-official task identifiers
-        |
-        v
-semantic plan: move -> pick_up -> move -> place_down
-        |
-        +---- semantic map + occupancy grid ---- A* route
-        |
-        +---- live MuJoCo object/grasp sites --- grasp frame
-        |
-        v
-bounded base motion + dual-arm OSC + carried-object attachment
-        |
-        v
-per-step trajectory -> objective score -> realism audit -> full-frame video
-```
+![Layered control and evidence architecture](report/assets/architecture_detail.svg)
 
 Task-level decisions are deterministic. Geometric decisions use live simulator poses, not hard-coded destination teleports. Motion functions return failure if a required controller, attachment, path, clearance test, or contact condition is missing.
 
@@ -119,13 +99,7 @@ Grasp execution uses a wrapped evaluation environment. A reset would normally re
 
 After grasp, the target object's real grasp state is synchronized back to navigation while every non-target object retains its live pre-grasp state. This acts as a transactional state handoff:
 
-```text
-navigation state N
-   -> initialize wrapped grasp state exactly from N
-   -> simulate grasp to state G
-   -> commit target and robot state from G
-   -> preserve non-target material state from N
-```
+![Transactional state handoff between navigation and grasp environments](report/assets/state_handoff.svg)
 
 The procedure is especially important in L5, where the second and third wrapped grasps must preserve totes already delivered to the destination.
 
