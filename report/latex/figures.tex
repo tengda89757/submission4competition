@@ -130,32 +130,39 @@
     flow/.style={-Latex,draw=ReportBlue,line width=0.85pt},
     commit/.style={-Latex,draw=ReportTeal,line width=0.85pt}
   ]
-    \node[box,fill=ReportPaleBlue] (n) {Navigation state \(N\)\\all live objects + robot};
+    \node[box,fill=ReportPaleBlue] (n) {Navigation snapshot \(N\)\\robot + every live object};
     \node[box,fill=ReportPaleTeal,right=6mm of n] (init) {Exact wrapper initialization\\reset hook reapplies \(N\)};
     \node[box,fill=ReportPaleOrange,right=6mm of init] (g) {Stepped physical grasp\\produces state \(G\)};
-    \node[box,fill=ReportPurple!12,right=6mm of g] (select) {Selective commit\\merge by ownership};
+    \node[box,fill=ReportPurple!12,right=6mm of g] (select) {Ownership-aware commit\\select state source};
     \draw[flow] (n) -- (init);
     \draw[flow] (init) -- (g);
     \draw[flow] (g) -- (select);
 
-    \node[box,fill=ReportPaleOrange,below=8mm of init,text width=42mm] (fromg)
-      {from \(G\): target object + robot state};
-    \node[box,fill=ReportPaleBlue,below=8mm of g,text width=42mm] (fromn)
-      {from \(N\): every non-target material state};
-    \draw[commit] (select.south) |- (fromg.east);
-    \draw[commit] (select.south) |- (fromn.east);
+    \coordinate (branchcenter) at ($(n.south)!0.5!(select.south)$);
+    \node[box,fill=ReportPaleOrange,below=8mm of branchcenter,xshift=-29mm,text width=50mm] (fromg)
+      {\textbf{Commit from \(G\)}\\target object + robot state};
+    \node[box,fill=ReportPaleBlue,below=8mm of branchcenter,xshift=29mm,text width=50mm] (fromn)
+      {\textbf{Preserve from \(N\)}\\all non-target material states};
+    \coordinate (split) at ([yshift=-3.5mm]select.south);
+    \draw[commit] (select.south) -- (split) -| (fromg.north);
+    \draw[commit] (split) -| (fromn.north);
 
     \node[
       below=8mm of $(fromg.south)!0.5!(fromn.south)$,
-      fill=ReportNavy,
-      text=white,
+      draw=ReportNavy,
+      line width=0.65pt,
+      fill=ReportPaleTeal,
+      text=ReportNavy,
       rounded corners=1.1mm,
-      inner xsep=6mm,
+      text width=105mm,
+      align=center,
+      minimum height=13mm,
+      inner xsep=4mm,
       inner ysep=2.4mm,
-      font=\sffamily\bfseries\scriptsize
-    ] (committed) {Committed live state preserves continuity across repeated L5 cycles};
-    \draw[commit] (fromg.south) |- (committed.west);
-    \draw[commit] (fromn.south) |- (committed.east);
+      font=\sffamily\scriptsize
+    ] (committed) {\textbf{Committed navigation state \(N'\)}\\continuity preserved across repeated L5 cycles};
+    \draw[commit] (fromg.south) -- ++(0,-3.5mm) -| ([xshift=-28mm]committed.north);
+    \draw[commit] (fromn.south) -- ++(0,-3.5mm) -| ([xshift=28mm]committed.north);
   \end{tikzpicture}%
   }
   \caption{Transactional handoff between navigation and wrapped grasp environments. Completed placements remain unchanged while the target and robot state are committed from the physical grasp rollout.}

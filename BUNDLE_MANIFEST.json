@@ -198,8 +198,8 @@
     },
     {
       "path": "output/pdf/TECHNICAL_REPORT.pdf",
-      "bytes": 1076467,
-      "sha256": "583727bb34c898d02d5a03df5fbd2740a0822fe43b6d3e6c128873b99647771e"
+      "bytes": 1077281,
+      "sha256": "cbba44443418b614930a0cef22dbaecca26b14d6e2b5a12b15751c0174947906"
     },
     {
       "path": "README.md",
@@ -253,8 +253,8 @@
     },
     {
       "path": "report/latex/figures.tex",
-      "bytes": 12165,
-      "sha256": "11b5aed3bc34fcdf151f349e6dfe45b2678f56d908012fc38148c7c6ba0c7363"
+      "bytes": 12588,
+      "sha256": "42562213b2bf7857cb6f08320c2c8b124db23ed3016cf573a1459b6b39298383"
     },
     {
       "path": "report/latex/generated/body.tex",
